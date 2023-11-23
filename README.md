@@ -1,16 +1,16 @@
 # Roadmap/Backlog do Projeto - Algoritmos de Busca em Sistemas P2P
 
 ## Implementação Geral
-- [ ] Implementar um programa para criar e gerenciar uma rede P2P não estruturada.
-- [ ] Realizar testes comparativos entre diferentes algoritmos de busca.
-- [ ] Preparar apresentação de slides com resultados dos testes.
+- [ ] Implementar um algoritmo capaz de criar e gerenciar uma rede P2P não estruturada.
+- [ ] Realizar testes comparativos entre os diferentes algoritmos de busca, indicando o mais eficiente
+- [ ] Preparar apresentação de slides com os resultados dos testes.
 
 ## Divisão de Tarefas
 
 ### Backlog Mateus
 - [ ] Leitura do arquivo de configuração para a rede P2P (formato JSON).
   - `num_nodes`, `min_neighbors`, `max_neighbors`, `resources`, `edges`.
-- [ ] Implementação da verificação de integridade da rede:
+- [ ] Implementação do algoritmo de verificação de integridade da rede:
   - Rede não particionada.
   - Limites de vizinhos respeitados.
   - Nós com recursos.
@@ -20,7 +20,7 @@
 
 ### Backlog Ísis
 - [ ] Implementação do algoritmo de busca por passeio aleatório (`random_walk`) e busca informada por passeio aleatório (`informed_random_walk`).
-- [ ] Implementação da interface para iniciação da busca na rede P2P:
+- [ ] Implementação da interface para a iniciação da busca na rede P2P:
   - `node_id`, `resource_id`, `ttl`, `algo`.
 - [ ] Implementação das funcionalidades opcionais:
   - Representação gráfica da rede P2P.
@@ -28,6 +28,6 @@
 - [ ] Desenvolvimento dos testes para as funcionalidades implementadas.
 
 ## Entrega Final
-- [ ] Compilação dos resultados dos testes em tabelas/gráficos para a apresentação.
-- [ ] Finalização da apresentação de slides.
+- [ ] Organizar os resultados dos testes em tabelas/gráficos para a apresentação.
+- [ ] Finalizar a apresentação de slides.
 - [ ] Demonstração ao vivo do programa para diferentes topologias e configurações da rede P2P.
