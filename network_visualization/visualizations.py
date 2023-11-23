@@ -1,57 +1,96 @@
 from pyvis.network import Network as pyvisNetwork
 import networkx as nx
-import community as community_louvain
-import webbrowser
 from json_files.json_read import read_and_parse_json
 from network_structure.network_object import Graph
-from network_visualization.network_manipulation import update_edge
+from network_visualization.deprecated_visualizations import _create_pyvis_graph
+import plotly.offline as pyo
+import plotly.graph_objs as go
 
 
-def _convert_to_networkx(graph) -> nx.Graph:
+def _convert_to_networkx(input_graph: Graph) -> nx.Graph:
     G = nx.Graph()
-    for node in graph.data.values():
+    for node in input_graph.data.values():
         G.add_node(node.node_id)
         for neighbor in node.neighbors:
             G.add_edge(node.node_id, neighbor.node_id)
     return G
 
 
-def _create_pyvis_graph(net: pyvisNetwork, nx_graph: nx.Graph, graph: Graph, output_filename: str):
-    # Configure the physics layout of the network
-    net.toggle_physics(True)  # Turn on physics simulation
+def plotly_networkx(graph: nx.Graph):
+    pos = nx.spring_layout(graph)
 
-    # Set node attributes for size and title
-    communities = community_louvain.best_partition(nx_graph)
-    node_degree = nx.degree_centrality(nx_graph)
+    edge_x = []
+    edge_y = []
+    for edge in graph.edges():
+        x0, y0 = pos[edge[0]]
+        x1, y1 = pos[edge[1]]
+        edge_x.extend([x0, x1, None])
+        edge_y.extend([y0, y1, None])
 
-    # Ensure the size is adequately scaled
-    max_degree = max(node_degree.values())
-    min_size = 100
-    size_multiplier = 50  # Adjust this as needed to scale the node sizes
+    edge_trace = go.Scatter(
+        x=edge_x, y=edge_y,
+        line=dict(width=2, color='#888'),  # Wider and darker edges for visibility
+        hoverinfo='none',
+        mode='lines')
 
-    for node in nx_graph.nodes():
-        resources = graph.get_node_resources(node)
-        size = min_size + size_multiplier * (node_degree[node] / max_degree)
-        title = f"Resources: {resources}"
-        group = communities[node]
-        net.add_node(node, title=title, group=group, value=size)
+    node_x = []
+    node_y = []
+    for node in graph.nodes():
+        x, y = pos[node]
+        node_x.append(x)
+        node_y.append(y)
 
-    # Add edges
-    for edge in nx_graph.edges():
-        net.add_edge(edge[0], edge[1])
-    update_edge(net, 'node_5', 'node_7', color="purple", width=3)
+    node_trace = go.Scatter(
+        x=node_x, y=node_y,
+        mode='markers',
+        hoverinfo='text',
+        marker=dict(
+            showscale=False,  # Not showing the scale for simplicity
+            color='LightSkyBlue',  # Light blue color for nodes
+            size=20,  # Larger node size for visibility
+            line=dict(width=2, color='RoyalBlue'))  # Blue border for nodes
+    )
 
-    # Generate and save the network graph
-    net.save_graph(output_filename)
-    webbrowser.open_new_tab(output_filename)
+    # Add text separately to ensure it's on top of the nodes, and improve visibility
+    text_trace = go.Scatter(
+        x=node_x, y=node_y,
+        mode='text',
+        text=['node_' + str(node) for node in graph.nodes()],
+        hoverinfo='none',
+        textposition="top center",
+        textfont=dict(
+            color='Black',
+            size=12  # Adjust text size here
+        )
+    )
+
+    fig = go.Figure(data=[edge_trace, node_trace, text_trace],
+                    layout=go.Layout(
+                        title='<br>Network graph made with Python',
+                        titlefont=dict(size=16),
+                        showlegend=False,
+                        hovermode='closest',
+                        margin=dict(b=20, l=5, r=5, t=40),
+                        annotations=[dict(
+                            text="Python code: <a href='https://plotly.com/'> Plotly</a>",
+                            showarrow=False, xref="paper", yref="paper",
+                            x=0.005, y=-0.002 )],
+                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
+                        plot_bgcolor='rgba(0,0,0,0)'  # Transparent background
+                    ))
+
+    pyo.iplot(fig)
 
 
 def visualize_graph():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     nx_graph = _convert_to_networkx(g)
-    net = pyvisNetwork(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
-    _create_pyvis_graph(net, nx_graph, g, 'output_graph.html')
+    plotly_networkx(nx_graph)
+    # net = pyvisNetwork(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
+    # _create_pyvis_graph(net, nx_graph, g, 'output_graph.html')
 
 
 def __main():
