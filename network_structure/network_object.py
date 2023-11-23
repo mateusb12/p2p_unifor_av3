@@ -1,3 +1,5 @@
+from typing import List
+
 from json_files.json_read import read_and_parse_json
 from network_structure.node_object import Node
 
@@ -31,7 +33,7 @@ class Graph:
             edge_table[_from].append(_to)
         return edge_table
 
-    def get_node_resources(self, node_id):
+    def get_node_resources(self, node_id: str) -> List[str]:
         return self.data[node_id].resources
 
 

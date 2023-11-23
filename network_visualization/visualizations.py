@@ -4,16 +4,10 @@ import community as community_louvain
 import webbrowser
 from json_files.json_read import read_and_parse_json
 from network_structure.network_object import Graph
+from network_visualization.network_manipulation import update_edge
 
 
-def visualize_graph():
-    json_data = read_and_parse_json("json_example.json")
-    g = Graph(json_data)
-    nx_graph = convert_to_networkx(g)
-    create_pyvis_graph(nx_graph, g, 'output_graph.html')
-
-
-def convert_to_networkx(graph):
+def _convert_to_networkx(graph):
     G = nx.Graph()
     for node in graph.data.values():
         G.add_node(node.node_id)
@@ -22,7 +16,7 @@ def convert_to_networkx(graph):
     return G
 
 
-def create_pyvis_graph(nx_graph, graph, output_filename):
+def _create_pyvis_graph(nx_graph, graph, output_filename):
     net = Network(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
 
     # Configure the physics layout of the network
@@ -34,7 +28,7 @@ def create_pyvis_graph(nx_graph, graph, output_filename):
 
     # Ensure the size is adequately scaled
     max_degree = max(node_degree.values())
-    min_size = 10
+    min_size = 100
     size_multiplier = 50  # Adjust this as needed to scale the node sizes
 
     for node in nx_graph.nodes():
@@ -47,10 +41,18 @@ def create_pyvis_graph(nx_graph, graph, output_filename):
     # Add edges
     for edge in nx_graph.edges():
         net.add_edge(edge[0], edge[1])
+    update_edge(net, 'node_5', 'node_7', color="purple", width=3)
 
     # Generate and save the network graph
     net.save_graph(output_filename)
     webbrowser.open_new_tab(output_filename)
+
+
+def visualize_graph():
+    json_data = read_and_parse_json("json_example.json")
+    g = Graph(json_data)
+    nx_graph = _convert_to_networkx(g)
+    _create_pyvis_graph(nx_graph, g, 'output_graph.html')
 
 
 def __main():
