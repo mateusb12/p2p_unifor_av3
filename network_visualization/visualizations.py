@@ -1,4 +1,4 @@
-from pyvis.network import Network
+from pyvis.network import Network as pyvisNetwork
 import networkx as nx
 import community as community_louvain
 import webbrowser
@@ -7,7 +7,7 @@ from network_structure.network_object import Graph
 from network_visualization.network_manipulation import update_edge
 
 
-def _convert_to_networkx(graph):
+def _convert_to_networkx(graph) -> nx.Graph:
     G = nx.Graph()
     for node in graph.data.values():
         G.add_node(node.node_id)
@@ -16,9 +16,7 @@ def _convert_to_networkx(graph):
     return G
 
 
-def _create_pyvis_graph(nx_graph, graph, output_filename):
-    net = Network(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
-
+def _create_pyvis_graph(net: pyvisNetwork, nx_graph: nx.Graph, graph: Graph, output_filename: str):
     # Configure the physics layout of the network
     net.toggle_physics(True)  # Turn on physics simulation
 
@@ -52,7 +50,8 @@ def visualize_graph():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     nx_graph = _convert_to_networkx(g)
-    _create_pyvis_graph(nx_graph, g, 'output_graph.html')
+    net = pyvisNetwork(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
+    _create_pyvis_graph(net, nx_graph, g, 'output_graph.html')
 
 
 def __main():
