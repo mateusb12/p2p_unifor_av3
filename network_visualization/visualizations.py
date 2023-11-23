@@ -10,7 +10,7 @@ def visualize_graph():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     nx_graph = convert_to_networkx(g)
-    create_pyvis_graph(nx_graph, 'output_graph.html')
+    create_pyvis_graph(nx_graph, g, 'output_graph.html')
 
 
 def convert_to_networkx(graph):
@@ -22,19 +22,26 @@ def convert_to_networkx(graph):
     return G
 
 
-def create_pyvis_graph(nx_graph, output_filename):
+def create_pyvis_graph(nx_graph, graph, output_filename):
     net = Network(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
+
+    # Configure the physics layout of the network
+    net.toggle_physics(True)  # Turn on physics simulation
 
     # Set node attributes for size and title
     communities = community_louvain.best_partition(nx_graph)
     node_degree = nx.degree_centrality(nx_graph)
-    betweenness = nx.betweenness_centrality(nx_graph)
-    closeness = nx.closeness_centrality(nx_graph)
+
+    # Ensure the size is adequately scaled
+    max_degree = max(node_degree.values())
+    min_size = 10
+    size_multiplier = 50  # Adjust this as needed to scale the node sizes
 
     for node in nx_graph.nodes():
-        title = f"Degree: {node_degree[node]:.2f}<br>Betweenness: {betweenness[node]:.2f}<br>Closeness: {closeness[node]:.2f}"
+        resources = graph.get_node_resources(node)
+        size = min_size + size_multiplier * (node_degree[node] / max_degree)
+        title = f"Resources: {resources}"
         group = communities[node]
-        size = 10 + 20 * node_degree[node]  # Adjust size to be proportional to degree
         net.add_node(node, title=title, group=group, value=size)
 
     # Add edges

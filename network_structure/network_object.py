@@ -31,6 +31,9 @@ class Graph:
             edge_table[_from].append(_to)
         return edge_table
 
+    def get_node_resources(self, node_id):
+        return self.data[node_id].resources
+
 
 def __main():
     json_data = read_and_parse_json("json_example.json")
