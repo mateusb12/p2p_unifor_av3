@@ -1,6 +1,5 @@
 from json_files.json_read import read_and_parse_json
 from network_structure.node_object import Node
-from graphviz import Digraph
 
 
 class Graph:
@@ -32,26 +31,10 @@ class Graph:
             edge_table[_from].append(_to)
         return edge_table
 
-    # def create_graphviz_graph(self):
-    #     dot = Digraph(comment='The Network')
-    #
-    #     # Add nodes
-    #     for node in self.data.values():
-    #         dot.node(node.node_id, node.node_id)
-    #
-    #     # Add edges
-    #     for node in self.data.values():
-    #         for neighbor in node.neighbors:
-    #             dot.edge(node.node_id, neighbor.node_id)
-    #
-    #     return dot
-
 
 def __main():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
-    # dot = g.create_graphviz_graph()
-    # dot.render('output_graph.gv', view=True)
     return
 
 

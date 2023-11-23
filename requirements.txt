@@ -1,0 +1,3 @@
+networkx~=3.2.1
+python-louvain~=0.16
+pyvis~=0.3.2
