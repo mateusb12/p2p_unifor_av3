@@ -1,6 +1,6 @@
 from typing import List
 
-from json_files.json_read import read_and_parse_json
+from json_files.json_read import read_and_parse_json, _read_json
 from network_structure.node_object import Node
 
 
@@ -38,7 +38,7 @@ class Graph:
 
 
 def __main():
-    json_data = read_and_parse_json("json_example.json")
+    json_data = _read_json("json_example.json")
     g = Graph(json_data)
     return
 

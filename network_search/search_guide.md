@@ -1,6 +1,6 @@
 #### 1. Implementação do Algoritmo DFS
-   - [ ] **Preparação**: Antes de iniciar a visualização, implemente o algoritmo DFS de tal forma que você possa rastrear a ordem de visita dos nós.
-   - [ ] **Rastreamento**: Crie uma lista ou outra estrutura de dados que mantenha o registro de cada passo do algoritmo DFS para posterior animação.
+   - [X] **Preparação**: Antes de iniciar a visualização, implemente o algoritmo DFS de tal forma que você possa rastrear a ordem de visita dos nós.
+   - [X] **Rastreamento**: Crie uma lista ou outra estrutura de dados que mantenha o registro de cada passo do algoritmo DFS para posterior animação.
 
 #### 2. Preparação da Visualização do Grafo
    - [ ] **Posições dos Nós**: Calcule e armazene as posições dos nós usando o layout de sua escolha (por exemplo, `nx.spring_layout`).
