@@ -10,7 +10,8 @@ import plotly.graph_objs as go
 def _convert_to_networkx(input_graph: Graph) -> nx.Graph:
     G = nx.Graph()
     for node in input_graph.data.values():
-        G.add_node(node.node_id)
+        node_to_be_added = node.node_id
+        G.add_node(node_to_be_added, info=node.resources)
         for neighbor in node.neighbors:
             G.add_edge(node.node_id, neighbor.node_id)
     return G
@@ -35,51 +36,32 @@ def plotly_networkx(graph: nx.Graph):
 
     node_x = []
     node_y = []
+    node_resources = []
     for node in graph.nodes():
         x, y = pos[node]
         node_x.append(x)
         node_y.append(y)
+        resources_info = '<br>'.join(graph.nodes[node]['info'])
+        node_resources.append(resources_info)
 
-    node_trace = go.Scatter(
-        x=node_x, y=node_y,
-        mode='markers',
-        hoverinfo='text',
-        marker=dict(
-            showscale=False,  # Not showing the scale for simplicity
-            color='LightSkyBlue',  # Light blue color for nodes
-            size=20,  # Larger node size for visibility
-            line=dict(width=2, color='RoyalBlue'))  # Blue border for nodes
-    )
+    node_trace = go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
+                            text=node_resources,
+                            marker=dict(showscale=False, color='LightSkyBlue', size=55,
+                                        line=dict(width=2, color='RoyalBlue')),
+                            hoverlabel=dict(bgcolor='DarkOrange', font=dict(color='LightYellow', size=13)))
 
     # Add text separately to ensure it's on top of the nodes, and improve visibility
-    text_trace = go.Scatter(
-        x=node_x, y=node_y,
-        mode='text',
-        text=['node_' + str(node) for node in graph.nodes()],
-        hoverinfo='none',
-        textposition="top center",
-        textfont=dict(
-            color='Black',
-            size=12  # Adjust text size here
-        )
-    )
+    text_trace = go.Scatter(x=node_x, y=node_y, mode='text', text=[f'•<br>{node}' for node in graph.nodes()],
+                            hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
     fig = go.Figure(data=[edge_trace, node_trace, text_trace],
-                    layout=go.Layout(
-                        title='<br>Network graph made with Python',
-                        titlefont=dict(size=16),
-                        showlegend=False,
-                        hovermode='closest',
-                        margin=dict(b=20, l=5, r=5, t=40),
-                        annotations=[dict(
-                            text="Python code: <a href='https://plotly.com/'> Plotly</a>",
-                            showarrow=False, xref="paper", yref="paper",
-                            x=0.005, y=-0.002 )],
-                        xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
-                        paper_bgcolor='rgba(0,0,0,0)',  # Transparent background
-                        plot_bgcolor='rgba(0,0,0,0)'  # Transparent background
-                    ))
+                    layout=go.Layout(title='<br>Network graph made with Python', titlefont=dict(size=16),
+                                     showlegend=False, hovermode='closest', margin=dict(b=20, l=5, r=5, t=40),
+                                     annotations=[dict(text="Python code: <a href='https://plotly.com/'> Plotly</a>",
+                                                       showarrow=False, xref="paper", yref="paper", x=0.005, y=-0.002)],
+                                     xaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                                     yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
+                                     paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)'))
 
     pyo.iplot(fig)
 
