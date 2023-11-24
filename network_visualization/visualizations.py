@@ -26,11 +26,7 @@ def plotly_networkx(graph: nx.Graph):
         edge_x.extend([x0, x1, None])
         edge_y.extend([y0, y1, None])
 
-    edge_trace = go.Scatter(
-        x=edge_x, y=edge_y,
-        line={"width": 2, "color": "#888"},
-        hoverinfo='none',
-        mode='lines')
+    edge_trace = go.Scatter(x=edge_x, y=edge_y, line={"width": 2, "color": "#888"}, hoverinfo='none', mode='lines')
 
     node_x = []
     node_y = []
@@ -68,6 +64,7 @@ def visualize_graph():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     nx_graph = _convert_to_networkx(g)
+    nx_graph_edges = list(nx_graph.edges)
     plotly_networkx(nx_graph)
     # net = pyvisNetwork(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
     # _create_pyvis_graph(net, nx_graph, g, 'output_graph.html')

@@ -28,6 +28,7 @@ class Node:
 
     def receive_message(self, inputMessage):
         inputMessage.ttl -= 1
+        print(f"Node {self.node_id} received message")
         if inputMessage.is_ttl_expired():
             return
         if self.has_resource(inputMessage.resource):

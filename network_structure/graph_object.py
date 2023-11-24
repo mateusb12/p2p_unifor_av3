@@ -30,9 +30,16 @@ class Graph:
         edge_table = {}
         for pair in edges:
             _from, _to = pair.get("from"), pair.get("to")
+
             if _from not in edge_table:
                 edge_table[_from] = []
+            if _to not in edge_table:
+                edge_table[_to] = []
+
             edge_table[_from].append(_to)
+            if _from != _to:  # Avoiding adding self-loop twice
+                edge_table[_to].append(_from)
+
         return edge_table
 
     def get_node_resources(self, node_id: str) -> List[str]:
