@@ -17,42 +17,84 @@ def _convert_to_networkx(input_graph: Graph) -> nx.Graph:
     return G
 
 
-def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
-    pos = nx.spring_layout(graph)
-
+def __create_edge_trace(position: dict, input_graph: nx.Graph):
     edge_x = []
     edge_y = []
-    for edge in graph.edges():
-        x0, y0 = pos[edge[0]]
-        x1, y1 = pos[edge[1]]
+    for edge in input_graph.edges():
+        x0, y0 = position[edge[0]]
+        x1, y1 = position[edge[1]]
         edge_x.extend([x0, x1, None])
         edge_y.extend([y0, y1, None])
 
-    edge_trace = go.Scatter(x=edge_x, y=edge_y, line={"width": 2, "color": "#888"}, hoverinfo='none', mode='lines')
+    return go.Scatter(x=edge_x, y=edge_y, line={"width": 2, "color": "#888"}, hoverinfo='none', mode='lines')
 
+
+def __get_node_plot_data(position: dict, input_graph: nx.Graph):
     node_x = []
     node_y = []
     node_resources = []
-    for node in graph.nodes():
-        x, y = pos[node]
+    for node in input_graph.nodes():
+        x, y = position[node]
         node_x.append(x)
         node_y.append(y)
-        resources_info = '<br>'.join(graph.nodes[node]['info'])
+        resources_info = '<br>'.join(input_graph.nodes[node]['info'])
         node_resources.append(resources_info)
+    return node_x, node_y, node_resources
 
-    node_blue_marker_style = dict(showscale=False, color='LightSkyBlue', size=55, line=dict(width=2, color='RoyalBlue'))
-    node_red_marker_style = dict(showscale=False, color='LightCoral', size=55, line=dict(width=2, color='Crimson'))
-    hover_label_style = dict(bgcolor='DarkOrange', font=dict(color='LightYellow', size=13))
 
-    node_trace_original = go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
-                                     text=node_resources, marker=node_blue_marker_style, hoverlabel=hover_label_style)
+def __get_text_trace(node_x: List[float], node_y: List[float], input_graph: nx.Graph):
+    text_trace_format = [f'•<br>{node}' for node in input_graph.nodes()]
+    return go.Scatter(x=node_x, y=node_y, mode='text', text=text_trace_format,
+                      hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
-    node_trace_red = go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
-                                text=node_resources, marker=node_red_marker_style, hoverlabel=hover_label_style)
 
-    text_trace_format = [f'•<br>{node}' for node in graph.nodes()]
-    text_trace = go.Scatter(x=node_x, y=node_y, mode='text', text=text_trace_format,
-                            hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
+def __get_node_trace(node_x, node_y, input_graph, desired_color):
+    node_trace_format = [f'•<br>{node}' for node in input_graph.nodes()]
+    node_marker_style = dict(showscale=False, color=desired_color, size=55, line=dict(width=2, color='RoyalBlue'))
+    return go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
+                      text=node_trace_format, marker=node_marker_style)
+
+
+def __add_sliders(fig, visited_nodes):
+    sliders_dict = {
+        "active": 0,
+        "yanchor": "top",
+        "xanchor": "left",
+        "currentvalue": {
+            "font": {"size": 20},
+            "prefix": "Visited:",
+            "visible": True,
+            "xanchor": "right"
+        },
+        "transition": {"duration": 300, "easing": "cubic-in-out"},
+        "pad": {"b": 10, "t": 50},
+        "len": 0.9,
+        "x": 0.1,
+        "y": 0,
+        "steps": []
+    }
+    for i, node in enumerate(visited_nodes):
+        slider_step = {"args": [
+            [f"frame{i + 1}"],
+            {"frame": {"duration": 1000, "redraw": True},
+             "mode": "immediate",
+             "transition": {"duration": 300}}
+        ],
+            "label": node,
+            "method": "animate"}
+        sliders_dict["steps"].append(slider_step)
+    fig.update_layout(sliders=[sliders_dict])
+
+
+def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
+    pos = nx.spring_layout(graph)
+
+    node_x, node_y, node_resources = __get_node_plot_data(pos, graph)
+    edge_trace = __create_edge_trace(pos, graph)
+    text_trace = __get_text_trace(node_x, node_y, graph)
+
+    node_trace_original = __get_node_trace(node_x, node_y, graph, 'LightSkyBlue')
+    node_trace_red = __get_node_trace(node_x, node_y, graph, 'LightCoral')
 
     layout = go.Layout(title='<br>Network graph made with Python', titlefont=dict(size=16),
                        showlegend=False, hovermode='closest', margin=dict(b=20, l=5, r=5, t=40),
@@ -72,36 +114,7 @@ def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
 
     fig.frames = frames
 
-    sliders_dict = {
-        "active": 0,
-        "yanchor": "top",
-        "xanchor": "left",
-        "currentvalue": {
-            "font": {"size": 20},
-            "prefix": "Visited:",
-            "visible": True,
-            "xanchor": "right"
-        },
-        "transition": {"duration": 300, "easing": "cubic-in-out"},
-        "pad": {"b": 10, "t": 50},
-        "len": 0.9,
-        "x": 0.1,
-        "y": 0,
-        "steps": []
-    }
-
-    for i, node in enumerate(visited_nodes):
-        slider_step = {"args": [
-            [f"frame{i + 1}"],
-            {"frame": {"duration": 1000, "redraw": True},
-             "mode": "immediate",
-             "transition": {"duration": 300}}
-        ],
-            "label": node,
-            "method": "animate"}
-        sliders_dict["steps"].append(slider_step)
-
-    fig.update_layout(sliders=[sliders_dict])
+    __add_sliders(fig, visited_nodes)
     fig.update_layout(updatemenus=[dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])])
     pyo.iplot(fig)
 
