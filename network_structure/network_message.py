@@ -1,10 +1,10 @@
-class Message:
+class NetworkMessage:
     def __init__(self, resource, origin, ttl=5):
         self.id = id(self)
         self.resource = resource
         self.origin = origin
         self.ttl = ttl
-        self.path = [origin]
+        self.path = []
 
     def add_node_to_path(self, node_id):
         self.path.append(node_id)
@@ -14,7 +14,7 @@ class Message:
 
 
 def __main():
-    m = Message("dancing_moon.mp3", "node_1")
+    m = NetworkMessage("dancing_moon.mp3", "node_1")
     return
 
 
