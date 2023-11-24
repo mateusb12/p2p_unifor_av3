@@ -25,6 +25,25 @@ class Node:
     def __repr__(self):
         return f"Node({self.node_id}, Resources: {self.resources}, Neighbors: {[n.node_id for n in self.neighbors]})"
 
+    def receive_message(self, inputMessage):
+        if inputMessage.is_ttl_expired():
+            return
+        if self.has_resource(inputMessage.resource):
+            self.send_response(inputMessage)
+        else:
+            inputMessage.ttl -= 1
+            inputMessage.add_node_to_path(self.node_id)
+            self.forward_message(inputMessage)
+
+    def forward_message(self, inputMessage):
+        for neighbor in self.neighbors:
+            if neighbor.node_id != inputMessage.path[-1]:  # Avoid sending back to the sender
+                neighbor.receive_message(inputMessage)
+
+    def send_response(self, message):
+        # Implement the logic to send the response back to the origin
+        pass
+
 
 def __main():
     # Example usage
