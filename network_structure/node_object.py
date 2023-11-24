@@ -1,8 +1,12 @@
+from utils.general_utils import generate_random_ip_address
+
+
 class Node:
     def __init__(self, node_id: str, resources: list):
         self.node_id = node_id
         self.resources = resources
         self.neighbors = []
+        self.ip = generate_random_ip_address()
 
     def add_neighbor(self, neighbor):
         """Add a neighbor to this node."""

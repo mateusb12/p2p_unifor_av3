@@ -10,7 +10,7 @@
 ### Backlog Mateus
 - [x] Leitura do arquivo de configuração para a rede P2P (formato JSON).
   - `num_nodes`, `min_neighbors`, `max_neighbors`, `resources`, `edges`.
-- [ ] Implementação do algoritmo de verificação de integridade da rede:
+- [x] Implementação do algoritmo de verificação de integridade da rede:
   - [x] Rede não particionada.
   - [x] Limites de vizinhos respeitados.
   - [x] Nós com recursos.
