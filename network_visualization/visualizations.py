@@ -48,11 +48,12 @@ def __get_text_trace(node_x: List[float], node_y: List[float], input_graph: nx.G
                       hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
 
-def __get_node_trace(node_x, node_y, input_graph, desired_color):
+def __get_node_trace(node_x: List[float], node_y: List[float], input_graph: nx.Graph, visited_nodes: List[str]):
     node_trace_format = [f'•<br>{node}' for node in input_graph.nodes()]
-    node_marker_style = dict(showscale=False, color=desired_color, size=55, line=dict(width=2, color='RoyalBlue'))
+    node_colors = ['LightCoral' if node in visited_nodes else 'LightSkyBlue' for node in input_graph.nodes()]
+    node_marker_style = dict(showscale=False, size=55, line=dict(width=2, color='Black'))
     return go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
-                      text=node_trace_format, marker=node_marker_style)
+                      text=node_trace_format, marker=dict(node_marker_style, color=node_colors))
 
 
 def __add_sliders(fig, visited_nodes):
@@ -93,8 +94,8 @@ def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
     edge_trace = __create_edge_trace(pos, graph)
     text_trace = __get_text_trace(node_x, node_y, graph)
 
-    node_trace_original = __get_node_trace(node_x, node_y, graph, 'LightSkyBlue')
-    node_trace_red = __get_node_trace(node_x, node_y, graph, 'LightCoral')
+    node_trace_original = __get_node_trace(node_x, node_y, graph, [])
+    node_trace_red = __get_node_trace(node_x, node_y, graph, ['node_4', 'node_6', 'node_5', 'node_7'])
 
     layout = go.Layout(title='<br>Network graph made with Python', titlefont=dict(size=16),
                        showlegend=False, hovermode='closest', margin=dict(b=20, l=5, r=5, t=40),
@@ -104,7 +105,7 @@ def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
                        yaxis=dict(showgrid=False, zeroline=False, showticklabels=False),
                        paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)')
 
-    fig = go.Figure(data=[edge_trace, node_trace_red, text_trace],
+    fig = go.Figure(data=[edge_trace, node_trace_original, text_trace],
                     layout=layout)
 
     frames = [
