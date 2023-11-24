@@ -31,3 +31,5 @@
 - [ ] Organizar os resultados dos testes em tabelas/gráficos para a apresentação.
 - [ ] Finalizar a apresentação de slides.
 - [ ] Demonstração ao vivo do programa para diferentes topologias e configurações da rede P2P.
+
+

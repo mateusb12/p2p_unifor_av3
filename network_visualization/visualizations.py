@@ -1,8 +1,6 @@
-from pyvis.network import Network as pyvisNetwork
 import networkx as nx
 from json_files.json_read import read_and_parse_json
 from network_structure.network_object import Graph
-from network_visualization.deprecated_visualizations import _create_pyvis_graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
 
@@ -30,7 +28,7 @@ def plotly_networkx(graph: nx.Graph):
 
     edge_trace = go.Scatter(
         x=edge_x, y=edge_y,
-        line=dict(width=2, color='#888'),  # Wider and darker edges for visibility
+        line={"width": 2, "color": "#888"},
         hoverinfo='none',
         mode='lines')
 
@@ -44,14 +42,14 @@ def plotly_networkx(graph: nx.Graph):
         resources_info = '<br>'.join(graph.nodes[node]['info'])
         node_resources.append(resources_info)
 
-    node_trace = go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
-                            text=node_resources,
-                            marker=dict(showscale=False, color='LightSkyBlue', size=55,
-                                        line=dict(width=2, color='RoyalBlue')),
-                            hoverlabel=dict(bgcolor='DarkOrange', font=dict(color='LightYellow', size=13)))
+    node_marker_style = dict(showscale=False, color='LightSkyBlue', size=55, line=dict(width=2, color='RoyalBlue'))
+    hover_label_style = dict(bgcolor='DarkOrange', font=dict(color='LightYellow', size=13))
 
-    # Add text separately to ensure it's on top of the nodes, and improve visibility
-    text_trace = go.Scatter(x=node_x, y=node_y, mode='text', text=[f'•<br>{node}' for node in graph.nodes()],
+    node_trace = go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
+                            text=node_resources, marker=node_marker_style, hoverlabel=hover_label_style)
+
+    text_trace_format = [f'•<br>{node}' for node in graph.nodes()]
+    text_trace = go.Scatter(x=node_x, y=node_y, mode='text', text=text_trace_format,
                             hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
     fig = go.Figure(data=[edge_trace, node_trace, text_trace],
