@@ -2,11 +2,12 @@ from utils.general_utils import generate_random_ip_address
 
 
 class Node:
-    def __init__(self, node_id: str, resources: list):
+    def __init__(self, node_id: str, resources: list, node_network):
         self.node_id = node_id
         self.resources = resources
         self.neighbors = []
         self.ip = generate_random_ip_address()
+        self.network = node_network
 
     def add_neighbor(self, neighbor):
         """Add a neighbor to this node."""
@@ -26,18 +27,19 @@ class Node:
         return f"Node({self.node_id}, Resources: {self.resources}, Neighbors: {[n.node_id for n in self.neighbors]})"
 
     def receive_message(self, inputMessage):
+        inputMessage.ttl -= 1
         if inputMessage.is_ttl_expired():
             return
         if self.has_resource(inputMessage.resource):
             self.send_response(inputMessage)
-        else:
-            inputMessage.ttl -= 1
-            inputMessage.add_node_to_path(self.node_id)
-            self.forward_message(inputMessage)
+            return
+        print(f"Node {self.node_id} received message")
+        self.broadcast_message(inputMessage)
 
-    def forward_message(self, inputMessage):
+    def broadcast_message(self, inputMessage):
+        sender_id = inputMessage.sender
         for neighbor in self.neighbors:
-            if neighbor.node_id != inputMessage.path[-1]:  # Avoid sending back to the sender
+            if neighbor.node_id != sender_id:  # Avoid sending back to the sender
                 neighbor.receive_message(inputMessage)
 
     def send_response(self, message):

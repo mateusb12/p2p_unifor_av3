@@ -1,6 +1,6 @@
 import networkx as nx
 from json_files.json_read import read_and_parse_json
-from network_structure.network_object import Graph
+from network_structure.graph_object import Graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
 

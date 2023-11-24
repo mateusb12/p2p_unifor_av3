@@ -1,7 +1,7 @@
 import random
 
 from json_files.json_read import _read_json
-from network_structure.network_object import Graph
+from network_structure.graph_object import Graph
 from network_structure.node_object import Node
 
 

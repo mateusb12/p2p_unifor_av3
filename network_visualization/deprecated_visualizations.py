@@ -4,7 +4,7 @@ import community as community_louvain
 import networkx as nx
 from pyvis.network import Network as pyvisNetwork
 
-from network_structure.network_object import Graph
+from network_structure.graph_object import Graph
 from network_visualization.network_manipulation import update_edge
 
 

@@ -8,13 +8,14 @@ class Graph:
     def __init__(self, network_data: dict):
         self.raw_data = network_data
         self.data = self.__initialize_nodes()
+        self.message_path = []
 
     def __initialize_nodes(self) -> dict:
         edges = self.__get_edge_table()
         nodes = self.raw_data.get("resources", {})
         node_pot = {}
         for node_alias, node_resources in nodes.items():
-            new_node = Node(node_id=node_alias, resources=node_resources)
+            new_node = Node(node_id=node_alias, resources=node_resources, node_network=self)
             node_pot[node_alias] = new_node
         for node_alias in nodes.keys():
             node_neighbors = edges.get(node_alias, [])
