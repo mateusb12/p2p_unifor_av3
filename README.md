@@ -8,13 +8,13 @@
 ## Divisão de Tarefas
 
 ### Backlog Mateus
-- [ ] Leitura do arquivo de configuração para a rede P2P (formato JSON).
+- [x] Leitura do arquivo de configuração para a rede P2P (formato JSON).
   - `num_nodes`, `min_neighbors`, `max_neighbors`, `resources`, `edges`.
 - [ ] Implementação do algoritmo de verificação de integridade da rede:
-  - Rede não particionada.
-  - Limites de vizinhos respeitados.
-  - Nós com recursos.
-  - Sem arestas redundantes.
+  - [x] Rede não particionada.
+  - [x] Limites de vizinhos respeitados.
+  - [x] Nós com recursos.
+  - [x] Sem arestas redundantes.
 - [ ] Implementação da funcionalidade de busca por inundação (`flooding`) e busca informada por inundação (`informed_flooding`).
 - [ ] Desenvolvimento dos testes para as funcionalidades implementadas.
 
