@@ -4,6 +4,7 @@ class NetworkMessage:
         self.resource = resource
         self.origin = origin
         self.ttl = ttl
+        self.last_sender = None
         self.path = []
 
     def add_node_to_path(self, node_id):

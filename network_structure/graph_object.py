@@ -21,7 +21,8 @@ class Graph:
             node_neighbors = edges.get(node_alias, [])
             node = node_pot[node_alias]
             for neighbor in node_neighbors:
-                node.add_neighbor(node_pot[neighbor])
+                if neighbor != node_alias:
+                    node.add_neighbor(node_pot[neighbor])
         return node_pot
 
     def __get_edge_table(self) -> dict:

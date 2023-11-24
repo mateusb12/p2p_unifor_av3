@@ -37,7 +37,7 @@ class Node:
         self.broadcast_message(inputMessage)
 
     def broadcast_message(self, inputMessage):
-        sender_id = inputMessage.sender
+        sender_id = inputMessage.last_sender
         for neighbor in self.neighbors:
             if neighbor.node_id != sender_id:  # Avoid sending back to the sender
                 neighbor.receive_message(inputMessage)
