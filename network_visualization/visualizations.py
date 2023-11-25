@@ -1,6 +1,8 @@
 from typing import List
 import networkx as nx
 from plotly.graph_objs import Scatter, Figure, Frame
+
+from core_search.dfs_search import dfs_search
 from json_files.json_read import read_and_parse_json
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
@@ -108,7 +110,8 @@ def __main():
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    visualizer.plot_network(visited_nodes=['node_4', 'node_6', 'node_5', 'node_7', 'node_8'])
+    visited_nodes = dfs_search(graph)
+    visualizer.plot_network(visited_nodes=visited_nodes)
     return
 
 
