@@ -12,7 +12,9 @@
     "node_7": ["autumn_leaves.mp3", "winter_chill.mp3"],
     "node_8": ["summer_samba.mp3"],
     "node_9": ["moonlit_sonata.mp3", "sunny_day.mp3"],
-    "node_10": ["cosmic_journey.mp3"]
+    "node_10": ["cosmic_journey.mp3"],
+    "node_11": ["immortal_land.mp3"],
+    "node_12": ["sacred_forest.mp3"]
   },
   "edges": [
     {"from": "node_1", "to": "node_2"},
@@ -23,14 +25,14 @@
     {"from": "node_3", "to": "node_4"},
     {"from": "node_4", "to": "node_5"},
     {"from": "node_4", "to": "node_6"},
-    {"from": "node_5", "to": "node_6"},
-    {"from": "node_5", "to": "node_7"},
     {"from": "node_6", "to": "node_7"},
     {"from": "node_7", "to": "node_8"},
     {"from": "node_8", "to": "node_9"},
     {"from": "node_9", "to": "node_10"},
     {"from": "node_10", "to": "node_1"},
-    {"from": "node_1", "to": "node_5"},
-    {"from": "node_2", "to": "node_6"}
+    {"from": "node_5", "to": "node_1"},
+    {"from": "node_2", "to": "node_6"},
+    {"from": "node_11", "to": "node_10"},
+    {"from": "node_12", "to": "node_11"}
   ]
 }

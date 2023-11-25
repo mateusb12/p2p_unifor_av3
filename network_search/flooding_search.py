@@ -7,7 +7,7 @@ from network_structure.graph_object import Graph
 def start_flooding_search(inputGraph: Graph, start_node_id: str, desiredResource: str) -> dict:
     visited_nodes = []
     ttl_history = []
-    initial_ttl = 2
+    initial_ttl = 3
     to_be_visited = [(start_node_id, initial_ttl)]
     while to_be_visited:
         current_node_label, current_ttl = to_be_visited.pop(0)
