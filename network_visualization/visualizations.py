@@ -1,6 +1,8 @@
 from typing import List
 
 import networkx as nx
+from plotly.graph_objs import Scatter
+
 from json_files.json_read import read_and_parse_json
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
@@ -49,44 +51,47 @@ def __get_text_trace(node_x: List[float], node_y: List[float], input_graph: nx.G
                       hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
 
-def __get_node_trace(node_x: List[float], node_y: List[float], input_graph: nx.Graph, visited_nodes: List[str]):
+def __get_hover_text_trace(input_graph: nx.Graph):
     node_resources = [item[1]['info'] for item in input_graph.nodes(data=True)]
-    node_trace_format = ['<br>'.join([f'• {resource}' for resource in resources]) for resources in node_resources]
+    return ['<br>'.join([f'• {resource}' for resource in resources]) for resources in node_resources]
+
+
+def __get_node_trace(node_x: List[float], node_y: List[float], input_graph: nx.Graph, visited_nodes: List[str]):
     node_colors = ['LightCoral' if node in visited_nodes else 'LightSkyBlue' for node in input_graph.nodes()]
     node_marker_style = dict(showscale=False, size=55, line=dict(width=2, color='Black'))
+    node_trace_format = __get_hover_text_trace(input_graph)
     return go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
                       text=node_trace_format, marker=dict(node_marker_style, color=node_colors))
 
 
 def __add_sliders(fig, visited_nodes):
-    sliders_dict = {
-        "active": 0,
-        "yanchor": "top",
-        "xanchor": "left",
-        "currentvalue": {
-            "font": {"size": 20},
-            "prefix": "Visited:",
-            "visible": True,
-            "xanchor": "right"
-        },
-        "transition": {"duration": 300, "easing": "cubic-in-out"},
-        "pad": {"b": 10, "t": 50},
-        "len": 0.9,
-        "x": 0.1,
-        "y": 0,
-        "steps": []
-    }
+    sliders_dict = {"active": 0, "yanchor": "top", "xanchor": "left",
+                    "currentvalue": {"font": {"size": 20}, "prefix": "Visited:", "visible": True, "xanchor": "right"},
+                    "transition": {"duration": 300, "easing": "cubic-in-out"}, "pad": {"b": 10, "t": 50}, "len": 0.9,
+                    "x": 0.1, "y": 0, "steps": []
+                    }
+    visited_nodes.insert(0, "Start")
     for i, node in enumerate(visited_nodes):
-        slider_step = {"args": [
-            [f"frame{i + 1}"],
-            {"frame": {"duration": 1000, "redraw": True},
-             "mode": "immediate",
-             "transition": {"duration": 300}}
-        ],
-            "label": node,
-            "method": "animate"}
+        slider_step = {"args": [[f"frame{i + 1}"], {"frame": {"duration": 1000, "redraw": True}, "mode": "immediate",
+                                                    "transition": {"duration": 300}}], "label": node,
+                       "method": "animate"}
         sliders_dict["steps"].append(slider_step)
     fig.update_layout(sliders=[sliders_dict])
+
+
+def __get_animation_frames(node_x: List[float], node_y: List[float], input_graph: nx.Graph,
+                           edge_trace: Scatter, text_trace: Scatter, node_trace_original: Scatter,
+                           visited_nodes: List[str]):
+    frames = [go.Frame(data=[edge_trace, node_trace_original, text_trace], name='frame1')]
+
+    # Iteratively add frames for each visited nodes subset
+    for i, node in enumerate(visited_nodes):
+        nodes_subset = visited_nodes[:i + 1]
+        node_trace = __get_node_trace(node_x, node_y, input_graph, nodes_subset)
+        frame_name = f'frame{i + 2}'
+        frames.append(go.Frame(data=[edge_trace, node_trace, text_trace], name=frame_name))
+
+    return frames
 
 
 def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
@@ -97,7 +102,6 @@ def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
     text_trace = __get_text_trace(node_x, node_y, graph)
 
     node_trace_original = __get_node_trace(node_x, node_y, graph, [])
-    node_trace_red = __get_node_trace(node_x, node_y, graph, ['node_4', 'node_6', 'node_5', 'node_7'])
 
     layout = go.Layout(title='<br>Network graph made with Python', titlefont=dict(size=16),
                        showlegend=False, hovermode='closest', margin=dict(b=20, l=5, r=5, t=40),
@@ -110,11 +114,7 @@ def plotly_networkx(graph: nx.Graph, visited_nodes: List[str] = None):
     fig = go.Figure(data=[edge_trace, node_trace_original, text_trace],
                     layout=layout)
 
-    frames = [
-        go.Frame(data=[edge_trace, node_trace_original, text_trace], name='frame1'),
-        go.Frame(data=[edge_trace, node_trace_red, text_trace], name='frame2')
-    ]
-
+    frames = __get_animation_frames(node_x, node_y, graph, edge_trace, text_trace, node_trace_original, visited_nodes)
     fig.frames = frames
 
     __add_sliders(fig, visited_nodes)
@@ -127,7 +127,7 @@ def visualize_graph():
     g = Graph(json_data)
     nx_graph = _convert_to_networkx(g)
     nx_graph_edges = list(nx_graph.edges)
-    visited_nodes = ['node_1', 'node_2', 'node_3']
+    visited_nodes = ['node_4', 'node_6', 'node_5', 'node_7', 'node_8']
     plotly_networkx(nx_graph, visited_nodes)
     # net = pyvisNetwork(notebook=False, width="100%", height="700px", bgcolor="#222222", font_color="white")
     # _create_pyvis_graph(net, nx_graph, g, 'output_graph.html')
