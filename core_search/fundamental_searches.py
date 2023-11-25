@@ -20,6 +20,19 @@ def dfs_search(inputGraph: nx.Graph) -> List[str]:
     return visited_nodes
 
 
+def bfs_search(inputGraph: nx.Graph) -> List[str]:
+    visited_nodes = []
+    all_nodes = list(inputGraph.nodes())
+    queue = [all_nodes[0]]
+    while queue:
+        current_node = queue.pop(0)
+        if current_node not in visited_nodes:
+            visited_nodes.append(current_node)
+            for neighbor in inputGraph[current_node]:
+                queue.append(neighbor)
+    return visited_nodes
+
+
 def __main():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)

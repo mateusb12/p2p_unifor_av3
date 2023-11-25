@@ -2,8 +2,9 @@ from typing import List
 import networkx as nx
 from plotly.graph_objs import Scatter, Figure, Frame
 
-from core_search.dfs_search import dfs_search
+from core_search.fundamental_searches import dfs_search, bfs_search
 from json_files.json_read import read_and_parse_json
+from network_search.flooding_search import search_pipeline
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
@@ -110,7 +111,8 @@ def __main():
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    visited_nodes = dfs_search(graph)
+    # visited_nodes = bfs_search(graph)
+    visited_nodes = search_pipeline()
     visualizer.plot_network(visited_nodes=visited_nodes)
     return
 
