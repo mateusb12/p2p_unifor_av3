@@ -4,10 +4,11 @@ from plotly.graph_objs import Scatter, Figure, Frame
 
 from core_search.fundamental_searches import dfs_search, bfs_search
 from json_files.json_read import read_and_parse_json
-from network_search.flooding_search import search_pipeline
+from network_search.flooding_search import search_pipeline, start_search
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
+
 from utils.general_utils import convert_graph_to_networkx
 
 
@@ -77,17 +78,32 @@ class NetworkGraphVisualizer:
         return Scatter(x=self.node_x, y=self.node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
                        text=node_trace_format, marker=dict(node_marker_style, color=node_colors))
 
-    def __get_animation_frames(self, edge_trace: Scatter,
-                               text_trace: Scatter, node_trace_original: Scatter, visited_nodes: List[str]):
-        frames = [Frame(data=[edge_trace, node_trace_original, text_trace], name='frame1')]
+    def __get_animation_frames(self, edge_trace: Scatter, text_trace: Scatter, node_trace: Scatter,
+                               visited_nodes: List[str], found: bool = False):
+        frames = [Frame(data=[edge_trace, node_trace, text_trace], name='frame1')]
         for i, node in enumerate(visited_nodes):
             nodes_subset = visited_nodes[:i + 1]
             node_trace = self.__get_node_trace(nodes_subset)
             frame_name = f'frame{i + 2}'
             frames.append(go.Frame(data=[edge_trace, node_trace, text_trace], name=frame_name))
+
+        if found and visited_nodes:
+            self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1, node_index=-1,
+                                      color='LightGreen')
+            self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1, node_index=0,
+                                      color='Orange')
         return frames
 
-    def plot_network(self, visited_nodes: List[str] = None):
+    def __change_frame_color(self, frames: List[Frame], visited_nodes: List[str], frame_index: int, node_index: int,
+                             color: str):
+        desired_frame = frames[frame_index]
+        desired_frame_colors = list(desired_frame.data[1].marker.color)
+        desired_node = visited_nodes[node_index]
+        node_index = list(self.graph.nodes()).index(desired_node)
+        desired_frame_colors[node_index] = color
+        desired_frame.data[1].marker.color = tuple(desired_frame_colors)
+
+    def plot_network(self, visited_nodes: List[str] = None, found: bool = False):
         node_x, node_y, _ = self.__get_node_plot_data()
         edge_trace = self.__create_edge_trace()
         text_trace = self.__get_text_trace()
@@ -103,7 +119,9 @@ class NetworkGraphVisualizer:
 
         fig = Figure(data=[edge_trace, node_trace_original, text_trace], layout=layout)
 
-        frames = self.__get_animation_frames(edge_trace, text_trace, node_trace_original, visited_nodes)
+        frames = self.__get_animation_frames(edge_trace=edge_trace, text_trace=text_trace,
+                                             node_trace=node_trace_original, visited_nodes=visited_nodes,
+                                             found=found)
         fig.frames = frames
 
         _add_sliders(fig, visited_nodes)
@@ -117,9 +135,10 @@ def __main():
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    # visited_nodes = bfs_search(graph)
-    visited_nodes = search_pipeline()
-    visualizer.plot_network(visited_nodes=visited_nodes)
+    result = start_search(inputGraph=g, start_node_id="node_8", desiredResource="sunset_boulevard.mp3")
+    visited_nodes = result["visited"]
+    searchResult = result["found"]
+    visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult)
     return
 
 

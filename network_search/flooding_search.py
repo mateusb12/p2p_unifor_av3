@@ -4,7 +4,7 @@ from network_structure.network_message import NetworkMessage
 from network_structure.graph_object import Graph
 
 
-def start_search(inputGraph: Graph, start_node_id: str, desiredResource: str):
+def start_search(inputGraph: Graph, start_node_id: str, desiredResource: str) -> dict:
     visited_nodes = []
     initial_ttl = 5
     to_be_visited = [(start_node_id, initial_ttl)]
@@ -12,14 +12,15 @@ def start_search(inputGraph: Graph, start_node_id: str, desiredResource: str):
         current_node_label, current_ttl = to_be_visited.pop(0)
         current_node = inputGraph.data[current_node_label]
         if desiredResource in current_node.resources:
-            return visited_nodes
+            return {"visited": visited_nodes, "found": True}
         if current_ttl <= 0:
             continue
         if current_node_label not in visited_nodes:
             visited_nodes.append(current_node_label)
             for neighbor in inputGraph.data[current_node_label].neighbors:
-                to_be_visited.append((neighbor.node_id, current_ttl-1))
-    return visited_nodes
+                new_ttl = current_ttl - 1
+                to_be_visited.append((neighbor.node_id, new_ttl))
+    return {"visited": visited_nodes, "found": False}
 
 
 def search_pipeline():
