@@ -4,7 +4,7 @@ from plotly.graph_objs import Scatter, Figure, Frame
 
 from core_search.fundamental_searches import dfs_search, bfs_search
 from json_files.json_read import read_and_parse_json
-from network_search.flooding_search import search_pipeline, start_search
+from network_search.flooding_search import search_pipeline, start_flooding_search
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
@@ -12,19 +12,22 @@ import plotly.graph_objs as go
 from utils.general_utils import convert_graph_to_networkx
 
 
-def _add_sliders(fig: Figure, visited_nodes: List[str]):
+def _add_sliders(fig: Figure, visited_nodes: List[str], ttl_history: List[str]):
     sliders_dict = {"active": 0, "yanchor": "top", "xanchor": "left",
-                    "currentvalue": {"font": {"size": 20}, "prefix": "Visited:", "visible": True,
+                    "currentvalue": {"font": {"size": 20},
+                                     "prefix": "TTL:",
+                                     "visible": True,
                                      "xanchor": "right"},
                     "transition": {"duration": 300, "easing": "cubic-in-out"}, "pad": {"b": 10, "t": 50},
                     "len": 0.9,
                     "x": 0.01, "y": 0, "steps": []
                     }
     visited_nodes.insert(0, "Start")
-    for i, node in enumerate(visited_nodes):
+    ttl_history.insert(0, str(ttl_history[0]))
+    for i, ttl in enumerate(ttl_history):
         slider_step = {
             "args": [[f"frame{i + 1}"], {"frame": {"duration": 1000, "redraw": True}, "mode": "immediate",
-                                         "transition": {"duration": 300}}], "label": node,
+                                         "transition": {"duration": 300}}], "label": str(ttl),
             "method": "animate"}
         sliders_dict["steps"].append(slider_step)
     fig.update_layout(sliders=[sliders_dict])
@@ -103,7 +106,7 @@ class NetworkGraphVisualizer:
         desired_frame_colors[node_index] = color
         desired_frame.data[1].marker.color = tuple(desired_frame_colors)
 
-    def plot_network(self, visited_nodes: List[str] = None, found: bool = False):
+    def plot_network(self, visited_nodes: List[str] = None, found: bool = False, ttl_history: List[str] = None):
         node_x, node_y, _ = self.__get_node_plot_data()
         edge_trace = self.__create_edge_trace()
         text_trace = self.__get_text_trace()
@@ -124,7 +127,7 @@ class NetworkGraphVisualizer:
                                              found=found)
         fig.frames = frames
 
-        _add_sliders(fig, visited_nodes)
+        _add_sliders(fig, visited_nodes, ttl_history)
         fig.update_layout(
             updatemenus=[dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])])
         pyo.iplot(fig)
@@ -135,10 +138,11 @@ def __main():
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    result = start_search(inputGraph=g, start_node_id="node_8", desiredResource="sunset_boulevard.mp3")
+    result = start_flooding_search(inputGraph=g, start_node_id="node_8", desiredResource="dancing_moon.mp3")
     visited_nodes = result["visited"]
     searchResult = result["found"]
-    visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult)
+    ttl_history = result["ttl_history"]
+    visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
     return
 
 
