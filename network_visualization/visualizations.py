@@ -33,6 +33,9 @@ class NetworkGraphVisualizer:
     def __init__(self, graph: nx.Graph):
         self.graph = graph
         self.position = nx.spring_layout(graph)
+        self.node_x: List[float] = []
+        self.node_y: List[float] = []
+        self.node_resources: List[str] = []
 
     def __create_edge_trace(self):
         edge_x, edge_y = [], []
@@ -52,31 +55,34 @@ class NetworkGraphVisualizer:
             node_y.append(y)
             resources_info = '<br>'.join(self.graph.nodes[node]['info'])
             node_resources.append(resources_info)
+        self.node_x = node_x
+        self.node_y = node_y
+        self.node_resources = node_resources
         return node_x, node_y, node_resources
 
-    def __get_text_trace(self, node_x: List[float], node_y: List[float]):
+    def __get_text_trace(self):
         node_labels = self.graph.nodes()
         text_trace_format = [f'•<br>{node}' for node in node_labels]
-        return Scatter(x=node_x, y=node_y, mode='text', text=text_trace_format,
+        return Scatter(x=self.node_x, y=self.node_y, mode='text', text=text_trace_format,
                        hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
     def __get_hover_text_trace(self):
         node_resources = [item[1]['info'] for item in self.graph.nodes(data=True)]
         return ['<br>'.join([f'• {resource}' for resource in resources]) for resources in node_resources]
 
-    def __get_node_trace(self, node_x: List[float], node_y: List[float], visited_nodes: List[str]):
+    def __get_node_trace(self, visited_nodes: List[str]):
         node_colors = ['LightCoral' if node in visited_nodes else 'LightSkyBlue' for node in self.graph.nodes()]
         node_marker_style = dict(showscale=False, size=55, line=dict(width=2, color='Black'))
         node_trace_format = self.__get_hover_text_trace()
-        return Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
+        return Scatter(x=self.node_x, y=self.node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
                        text=node_trace_format, marker=dict(node_marker_style, color=node_colors))
 
-    def __get_animation_frames(self, node_x: List[float], node_y: List[float], edge_trace: Scatter,
+    def __get_animation_frames(self, edge_trace: Scatter,
                                text_trace: Scatter, node_trace_original: Scatter, visited_nodes: List[str]):
         frames = [Frame(data=[edge_trace, node_trace_original, text_trace], name='frame1')]
         for i, node in enumerate(visited_nodes):
             nodes_subset = visited_nodes[:i + 1]
-            node_trace = self.__get_node_trace(node_x, node_y, nodes_subset)
+            node_trace = self.__get_node_trace(nodes_subset)
             frame_name = f'frame{i + 2}'
             frames.append(go.Frame(data=[edge_trace, node_trace, text_trace], name=frame_name))
         return frames
@@ -84,8 +90,8 @@ class NetworkGraphVisualizer:
     def plot_network(self, visited_nodes: List[str] = None):
         node_x, node_y, _ = self.__get_node_plot_data()
         edge_trace = self.__create_edge_trace()
-        text_trace = self.__get_text_trace(node_x, node_y)
-        node_trace_original = self.__get_node_trace(node_x, node_y, [])
+        text_trace = self.__get_text_trace()
+        node_trace_original = self.__get_node_trace([])
 
         layout = go.Layout(title='<br>Network graph made with Python', titlefont=dict(size=16),
                            showlegend=False, hovermode='closest', margin=dict(b=20, l=5, r=5, t=40),
@@ -97,7 +103,7 @@ class NetworkGraphVisualizer:
 
         fig = Figure(data=[edge_trace, node_trace_original, text_trace], layout=layout)
 
-        frames = self.__get_animation_frames(node_x, node_y, edge_trace, text_trace, node_trace_original, visited_nodes)
+        frames = self.__get_animation_frames(edge_trace, text_trace, node_trace_original, visited_nodes)
         fig.frames = frames
 
         _add_sliders(fig, visited_nodes)

@@ -19,8 +19,8 @@
 - [ ] Implementação da funcionalidade de busca por inundação (`flooding`):
   - [X] Implementar mecanismo de propagação de solicitações.
   - [X] Definir e aplicar o parâmetro TTL (Time To Live).
-  - [ ] Manter uma lista de nós visitados para evitar visitas repetidas.
-  - [ ] Verificar se o recurso de fato foi encontrado em cada nó e interromper a busca se encontrado.
+  - [X] Manter uma lista de nós visitados para evitar visitas repetidas.
+  - [X] Verificar se o recurso de fato foi encontrado em cada nó e interromper a busca se encontrado.
 - [ ] Implementação da funcionalidade de busca informada por inundação (`informed_flooding`):
   - [ ] Utilizar cache local para acelerar a busca.
   - [ ] Implementar a lógica de decisão baseada nas informações prévias.
