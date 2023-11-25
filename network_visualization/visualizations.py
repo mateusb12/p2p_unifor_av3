@@ -1,20 +1,11 @@
 from typing import List
 import networkx as nx
-from plotly.graph_objs import Scatter, Figure, Layout, Frame
+from plotly.graph_objs import Scatter, Figure, Frame
 from json_files.json_read import read_and_parse_json
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
-
-
-def _convert_to_networkx(input_graph: Graph) -> nx.Graph:
-    G = nx.Graph()
-    for node in input_graph.data.values():
-        node_to_be_added = node.node_id
-        G.add_node(node_to_be_added, info=node.resources)
-        for neighbor in node.neighbors:
-            G.add_edge(node.node_id, neighbor.node_id)
-    return G
+from utils.general_utils import convert_graph_to_networkx
 
 
 def _add_sliders(fig: Figure, visited_nodes: List[str]):
@@ -23,7 +14,7 @@ def _add_sliders(fig: Figure, visited_nodes: List[str]):
                                      "xanchor": "right"},
                     "transition": {"duration": 300, "easing": "cubic-in-out"}, "pad": {"b": 10, "t": 50},
                     "len": 0.9,
-                    "x": 0.1, "y": 0, "steps": []
+                    "x": 0.01, "y": 0, "steps": []
                     }
     visited_nodes.insert(0, "Start")
     for i, node in enumerate(visited_nodes):
@@ -115,7 +106,7 @@ class NetworkGraphVisualizer:
 def __main():
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
-    graph = _convert_to_networkx(g)
+    graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
     visualizer.plot_network(visited_nodes=['node_4', 'node_6', 'node_5', 'node_7', 'node_8'])
     return

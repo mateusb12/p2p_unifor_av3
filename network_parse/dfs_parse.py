@@ -1,6 +1,6 @@
 import random
 
-from json_files.json_read import _read_json
+from json_files.json_read import read_json
 from network_structure.graph_object import Graph
 from network_structure.node_object import Node
 
@@ -33,7 +33,7 @@ def parse_graph(inputGraph: Graph, graphRestraints: dict):
 
 
 def __main():
-    json_data = _read_json("json_example.json")
+    json_data = read_json("json_example.json")
     g = Graph(json_data)
     res = parse_graph(inputGraph=g, graphRestraints=json_data)
     return

@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 
-def _read_json(filename: str) -> dict or None:
+def read_json(filename: str) -> dict or None:
     path = get_json_files_path() / filename
     try:
         with open(path, 'r') as file:
@@ -74,7 +74,7 @@ def _parse_json(json_data: dict) -> Tuple[bool, str]:
 
 
 def read_and_parse_json(filename: str) -> dict or str:
-    json_content = _read_json(filename)
+    json_content = read_json(filename)
     json_parse_result, json_parse_explanation = _parse_json(json_content)
     if json_parse_result:
         return json_content
