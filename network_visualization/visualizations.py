@@ -43,13 +43,15 @@ def __get_node_plot_data(position: dict, input_graph: nx.Graph):
 
 
 def __get_text_trace(node_x: List[float], node_y: List[float], input_graph: nx.Graph):
-    text_trace_format = [f'•<br>{node}' for node in input_graph.nodes()]
+    node_labels = input_graph.nodes()
+    text_trace_format = [f'•<br>{node}' for node in node_labels]
     return go.Scatter(x=node_x, y=node_y, mode='text', text=text_trace_format,
                       hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
 
 def __get_node_trace(node_x: List[float], node_y: List[float], input_graph: nx.Graph, visited_nodes: List[str]):
-    node_trace_format = [f'•<br>{node}' for node in input_graph.nodes()]
+    node_resources = [item[1]['info'] for item in input_graph.nodes(data=True)]
+    node_trace_format = ['<br>'.join([f'• {resource}' for resource in resources]) for resources in node_resources]
     node_colors = ['LightCoral' if node in visited_nodes else 'LightSkyBlue' for node in input_graph.nodes()]
     node_marker_style = dict(showscale=False, size=55, line=dict(width=2, color='Black'))
     return go.Scatter(x=node_x, y=node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
