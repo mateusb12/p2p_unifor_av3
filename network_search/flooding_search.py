@@ -4,22 +4,18 @@ from network_structure.network_message import NetworkMessage
 from network_structure.graph_object import Graph
 
 
-# def start_search(inputGraph: Graph, start_node_id: str, resource: str):
-#     message = NetworkMessage(resource, start_node_id)
-#     starting_node = inputGraph.data[start_node_id]
-#     starting_node.receive_message(message)
-#     return
-
-def start_search(inputGraph: Graph):
+def start_search(inputGraph: Graph, start_node_id: str, resource: str):
     visited_nodes = []
-    all_nodes = list(inputGraph.data.keys())
-    queue = [all_nodes[0]]
-    while queue:
-        current_node = queue.pop(0)
+    initial_ttl = 2
+    to_be_visited = [(start_node_id, initial_ttl)]
+    while to_be_visited:
+        current_node, current_ttl = to_be_visited.pop(0)
+        if current_ttl <= 0:
+            continue
         if current_node not in visited_nodes:
             visited_nodes.append(current_node)
             for neighbor in inputGraph.data[current_node].neighbors:
-                queue.append(neighbor.node_id)
+                to_be_visited.append((neighbor.node_id, current_ttl-1))
     return visited_nodes
 
 
@@ -28,11 +24,12 @@ def search_pipeline():
     g = Graph(json_data)
     res = parse_graph(inputGraph=g, graphRestraints=json_data)
     # start_search(inputGraph=g, start_node_id="node_3", resource="sunny_day.mp3")
-    return start_search(inputGraph=g)
+    return start_search(inputGraph=g, start_node_id="node_8", resource="sunny_day.mp3")
 
 
 def __main():
-    search_pipeline()
+    result = search_pipeline()
+    return
 
 
 if __name__ == "__main__":
