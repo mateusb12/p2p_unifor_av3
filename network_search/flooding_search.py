@@ -17,15 +17,14 @@ def start_flooding_search(inputGraph: Graph, start_node_id: str, desiredResource
             ttl_history.append(current_ttl)
             found = current_node_label
             continue
-        if current_ttl <= 0:
+        if current_ttl < 0:
             continue
         if current_node_label not in visited_nodes:
             visited_nodes.append(current_node_label)
+            new_ttl = current_ttl - 1
             ttl_history.append(current_ttl)
             for neighbor in inputGraph.data[current_node_label].neighbors:
-                new_ttl = current_ttl - 1
                 to_be_visited.append((neighbor.node_id, new_ttl))
-    ttl_history[-1] = 0
     return {"visited": visited_nodes, "found": found, "ttl_history": ttl_history}
 
 
@@ -35,7 +34,7 @@ def search_pipeline():
     res = parse_graph(inputGraph=g, graphRestraints=json_data)
     # start_search(inputGraph=g, start_node_id="node_3", resource="sunny_day.mp3")
     return start_flooding_search(inputGraph=g, start_node_id="node_6", desiredResource="cosmic_journey.mp3",
-                                 initial_ttl=5)
+                                 initial_ttl=2)
 
 
 def __main():

@@ -14,7 +14,8 @@
     "node_9": ["moonlit_sonata.mp3", "sunny_day.mp3"],
     "node_10": ["cosmic_journey.mp3"],
     "node_11": ["immortal_land.mp3"],
-    "node_12": ["sacred_forest.mp3"]
+    "node_12": ["sacred_forest.mp3"],
+    "node_13": ["mystic_river.mp3"]
   },
   "edges": [
     {"from": "node_1", "to": "node_2"},
@@ -33,6 +34,7 @@
     {"from": "node_5", "to": "node_1"},
     {"from": "node_2", "to": "node_6"},
     {"from": "node_11", "to": "node_10"},
-    {"from": "node_12", "to": "node_11"}
+    {"from": "node_12", "to": "node_11"},
+    {"from": "node_13", "to": "node_12"}
   ]
 }

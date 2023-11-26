@@ -139,8 +139,8 @@ def __main():
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    result = start_flooding_search(inputGraph=g, start_node_id="node_11", desiredResource="sacred_forest.mp3",
-                                   initial_ttl=2)
+    result = start_flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="mystic_river.mp3",
+                                   initial_ttl=3)
     visited_nodes = result["visited"]
     searchResult = result["found"]
     ttl_history = result["ttl_history"]
