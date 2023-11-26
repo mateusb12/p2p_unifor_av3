@@ -1,3 +1,4 @@
+import pprint
 from typing import Tuple
 
 from path_references.all_references import get_json_files_path
@@ -56,15 +57,16 @@ def _parse_json(json_data: dict) -> Tuple[bool, str]:
     if not (0 <= min_neighbors <= max_neighbors):
         return False, f"Invalid number of neighbors. min_neighbors should be less than or equal to {max_neighbors}."
 
-    # Constrói um dicionário para contar os vizinhos de cada nó
-    neighbor_count = {node: [] for node in resources}
+    neighbor_count = {int(node): set() for node in resources}
     for edge in edges:
-        if edge.get("from") in neighbor_count and edge.get("to") in neighbor_count:
-            neighbor_count[edge["from"]].append(edge["to"])
+        from_node = int(edge.get("from"))
+        to_node = int(edge.get("to"))
+        if from_node in neighbor_count and to_node in neighbor_count:
+            neighbor_count[from_node].add(to_node)
+            neighbor_count[to_node].add(from_node)
         else:
             return False, f"Invalid node in edge: {edge}"
 
-    # Verifica se todos os nós têm o número correto de vizinhos
     for node, neighbors in neighbor_count.items():
         if not _validate_node_neighborhood(neighbors, min_neighbors, max_neighbors):
             return False, (f"Invalid number of neighbors for node {node}."
@@ -83,7 +85,15 @@ def read_and_parse_json(filename: str) -> dict or str:
 
 def run_all_test_cases():
     path = get_json_files_path()
-    return
+    files_in_path_folder = [file for file in path.iterdir() if file.is_file()]
+    test_case_files = [file for file in files_in_path_folder if file.name.startswith("test_case")]
+    results = {}
+    for file in test_case_files:
+        filename = file.name
+        json_data = read_json(file.name)
+        results[file.name] = _parse_json(json_data)
+    pprint.pprint(results, width=150)
+    return results
 
 
 def __main():

@@ -1,1 +1,1 @@
-{"num_nodes": 10, "min_neighbors": 1, "max_neighbors": true, "resources": {"1": {}, "2": {}, "3": {}}, "edges": [{"from": "1", "to": "2"}, {"from": "2", "to": "3"}, {"from": "3", "to": "1"}]}
+{"num_nodes": 10, "min_neighbors": 1, "max_neighbors": "three", "resources": {"1": {}, "2": {}, "3": {}}, "edges": [{"from": "1", "to": "2"}, {"from": "2", "to": "3"}, {"from": "3", "to": "1"}, {"from": "4", "to": "1"}]}
