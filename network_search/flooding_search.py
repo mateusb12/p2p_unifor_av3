@@ -8,13 +8,15 @@ def start_flooding_search(inputGraph: Graph, start_node_id: str, desiredResource
     visited_nodes = []
     ttl_history = []
     to_be_visited = [(start_node_id, initial_ttl)]
+    found = "None"
     while to_be_visited:
         current_node_label, current_ttl = to_be_visited.pop(0)
         current_node = inputGraph.data[current_node_label]
         if desiredResource in current_node.resources:
             visited_nodes.append(current_node_label)
             ttl_history.append(current_ttl)
-            return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history}
+            found = current_node_label
+            continue
         if current_ttl <= 0:
             continue
         if current_node_label not in visited_nodes:
@@ -24,7 +26,7 @@ def start_flooding_search(inputGraph: Graph, start_node_id: str, desiredResource
                 new_ttl = current_ttl - 1
                 to_be_visited.append((neighbor.node_id, new_ttl))
     ttl_history[-1] = 0
-    return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history}
+    return {"visited": visited_nodes, "found": found, "ttl_history": ttl_history}
 
 
 def search_pipeline():
