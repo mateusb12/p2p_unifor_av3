@@ -81,8 +81,14 @@ def read_and_parse_json(filename: str) -> dict or str:
     return json_parse_explanation
 
 
+def run_all_test_cases():
+    path = get_json_files_path()
+    return
+
+
 def __main():
-    json_data = read_and_parse_json("json_files/json_example.json")
+    # json_data = read_and_parse_json("json_example.json")
+    run_all_test_cases()
     return
 
 

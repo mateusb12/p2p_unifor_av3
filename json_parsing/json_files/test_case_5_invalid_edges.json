@@ -1,0 +1,1 @@
+{"num_nodes": 10, "min_neighbors": 1, "max_neighbors": 3, "resources": {"1": {}, "2": {}, "3": {}}, "edges": {"1": "2", "2": "3", "3": "1"}}
