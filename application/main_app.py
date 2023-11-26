@@ -1,21 +1,14 @@
-# app.py - your Flask application
-
 from flask import Flask, render_template
-import plotly.io as pio
+
+from network_visualization.visualizations import generate_network_graph_html
 
 app = Flask(__name__)
 
 
-def generate_plotly_graph_html():
-    # ... your code to setup the Plotly figure ...
-    fig = ...  # the figure you created with the plot_network function
-    return pio.to_html(fig, full_html=False)
-
-
 @app.route('/')
 def index():
-    plotly_graph_html = generate_plotly_graph_html()
-    return render_template('index.html', plotly_graph_html=plotly_graph_html)
+    graph_html = generate_network_graph_html("node_12", "mystic_river.mp3", 4)
+    return render_template('html_visualization.html', plotly_graph_html=graph_html)
 
 
 if __name__ == '__main__':

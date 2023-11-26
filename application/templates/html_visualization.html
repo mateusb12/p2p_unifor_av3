@@ -32,10 +32,14 @@
         border: none;
         border-radius: 20px;
         cursor: pointer;
-        background: #dff0d8;
+        background: #dff0d8; /* Light green background */
         color: #3c763d;
         width: 200px; /* Fixed width for uniformity */
         text-align: center;
+    }
+    .button.file-label {
+        background: #007bff; /* Blue background */
+        color: white; /* White text color */
     }
     .info-box {
         padding: 10px;
@@ -67,7 +71,6 @@
     <div class="info-box">Message Amount: 5</div>
     <div class="info-box">Nodes Involved: 3</div>
     <div class="graph-container">
-        <!-- The Plotly graph will be inserted here -->
         {{ plotly_graph_html|safe }}
     </div>
 </div>

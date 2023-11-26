@@ -132,19 +132,37 @@ class NetworkGraphVisualizer:
         fig.update_layout(
             updatemenus=[dict(type="buttons", buttons=[dict(label="Play", method="animate", args=[None])])])
         pyo.iplot(fig)
+        return fig
 
 
-def __main():
+def generate_network_graph_html(start_node_id, desired_resource, initial_ttl):
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    result = start_flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="mystic_river.mp3",
-                                   initial_ttl=4)
+    result = start_flooding_search(inputGraph=g, start_node_id=start_node_id, desiredResource=desired_resource,
+                                   initial_ttl=initial_ttl)
     visited_nodes = result["visited"]
     searchResult = result["found"]
     ttl_history = result["ttl_history"]
-    visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
+
+    fig = visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
+    graph_html = fig.to_html(fig, full_html=False)
+    return graph_html
+
+
+def __main():
+    # json_data = read_and_parse_json("json_example.json")
+    # g = Graph(json_data)
+    # graph = convert_graph_to_networkx(g)
+    # visualizer = NetworkGraphVisualizer(graph)
+    # result = start_flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="mystic_river.mp3",
+    #                                initial_ttl=4)
+    # visited_nodes = result["visited"]
+    # searchResult = result["found"]
+    # ttl_history = result["ttl_history"]
+    # visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
+    aux = generate_network_graph_html(start_node_id="node_12", desired_resource="mystic_river.mp3", initial_ttl=4)
     return
 
 
