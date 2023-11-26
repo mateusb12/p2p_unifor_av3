@@ -14,7 +14,7 @@ def get_json_files_path() -> Path:
     Returns the path of the folder containing the json files.
     :return: Path
     """
-    return get_main_folder_path() / "json_files"
+    return get_main_folder_path() / "json_parsing"
 
 
 def __main():

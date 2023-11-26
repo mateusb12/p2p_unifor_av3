@@ -2,7 +2,7 @@ from typing import List
 
 import networkx as nx
 
-from json_files.json_read import read_and_parse_json
+from json_parsing.json_read import read_and_parse_json
 from network_structure.graph_object import Graph
 from utils.general_utils import convert_graph_to_networkx
 

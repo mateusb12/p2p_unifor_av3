@@ -1,4 +1,4 @@
-from json_files.json_read import read_json
+from json_parsing.json_read import read_json
 from network_parse.dfs_parse import parse_graph
 from network_structure.graph_object import Graph
 

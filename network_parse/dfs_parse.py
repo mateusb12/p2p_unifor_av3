@@ -1,6 +1,6 @@
 import random
 
-from json_files.json_read import read_json
+from json_parsing.json_read import read_json
 from network_structure.graph_object import Graph
 from network_structure.node_object import Node
 

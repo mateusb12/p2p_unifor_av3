@@ -3,7 +3,7 @@ import networkx as nx
 from plotly.graph_objs import Scatter, Figure, Frame
 
 from core_search.fundamental_searches import dfs_search, bfs_search
-from json_files.json_read import read_and_parse_json
+from json_parsing.json_read import read_and_parse_json
 from network_search.flooding_search import search_pipeline, start_flooding_search
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
@@ -135,7 +135,7 @@ class NetworkGraphVisualizer:
         return fig
 
 
-def generate_network_graph_html(start_node_id, desired_resource, initial_ttl):
+def generate_network_graph_html(start_node_id, desired_resource, initial_ttl) -> str:
     json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
@@ -152,16 +152,6 @@ def generate_network_graph_html(start_node_id, desired_resource, initial_ttl):
 
 
 def __main():
-    # json_data = read_and_parse_json("json_example.json")
-    # g = Graph(json_data)
-    # graph = convert_graph_to_networkx(g)
-    # visualizer = NetworkGraphVisualizer(graph)
-    # result = start_flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="mystic_river.mp3",
-    #                                initial_ttl=4)
-    # visited_nodes = result["visited"]
-    # searchResult = result["found"]
-    # ttl_history = result["ttl_history"]
-    # visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
     aux = generate_network_graph_html(start_node_id="node_12", desired_resource="mystic_river.mp3", initial_ttl=4)
     return
 
