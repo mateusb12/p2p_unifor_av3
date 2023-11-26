@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Network Graph Visualization</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background: #e9ecef; /* Assuming a grid or patterned background */
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .container {
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        padding: 20px;
+        width: 80%;
+        max-width: 600px;
+        display: flex;
+        flex-direction: column; /* Stack elements vertically */
+        align-items: center; /* Center-align items for aesthetics */
+    }
+    .button {
+        font-size: 16px;
+        padding: 10px 20px;
+        margin: 10px 0; /* Stack buttons with space in-between */
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        background: #dff0d8;
+        color: #3c763d;
+        width: 200px; /* Fixed width for uniformity */
+        text-align: center;
+    }
+    .info-box {
+        padding: 10px;
+        margin: 10px 0; /* Space out from other elements */
+        border-radius: 4px;
+        background: #fcf8e3;
+        color: #8a6d3b;
+        font-weight: bold;
+        width: 200px; /* Fixed width for uniformity */
+        text-align: center;
+    }
+    .graph-container {
+        border: 2px solid #ced4da;
+        margin-top: 20px;
+        width: 100%; /* Full width within the container */
+        height: 300px;
+    }
+    .file-input {
+        display: none;
+    }
+</style>
+</head>
+<body>
+
+<div class="container">
+    <label for="fileInput" class="button file-label">Choose file</label>
+    <input type="file" id="fileInput" class="file-input"/>
+    <button class="button search-button">Search</button>
+    <div class="info-box">Message Amount: 5</div>
+    <div class="info-box">Nodes Involved: 3</div>
+    <div class="graph-container">
+        <!-- The Plotly graph will be inserted here -->
+        {{ plotly_graph_html|safe }}
+    </div>
+</div>
+
+<script>
+    document.querySelector('.file-label').addEventListener('click', function() {
+        document.getElementById('fileInput').click();
+    });
+</script>
+
+</body>
+</html>

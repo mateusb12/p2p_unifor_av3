@@ -107,7 +107,7 @@ class NetworkGraphVisualizer:
         desired_frame_colors[node_index] = color
         desired_frame.data[1].marker.color = tuple(desired_frame_colors)
 
-    def plot_network(self, visited_nodes: List[str] = None, found: bool = False, ttl_history: List[str] = None):
+    def plot_network(self, visited_nodes: List[str] = None, found: str = "None", ttl_history: List[str] = None):
         node_x, node_y, _ = self.__get_node_plot_data()
         edge_trace = self.__create_edge_trace()
         text_trace = self.__get_text_trace()
@@ -140,7 +140,7 @@ def __main():
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
     result = start_flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="mystic_river.mp3",
-                                   initial_ttl=3)
+                                   initial_ttl=4)
     visited_nodes = result["visited"]
     searchResult = result["found"]
     ttl_history = result["ttl_history"]

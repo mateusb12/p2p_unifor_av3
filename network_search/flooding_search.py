@@ -9,6 +9,7 @@ def start_flooding_search(inputGraph: Graph, start_node_id: str, desiredResource
     ttl_history = []
     to_be_visited = [(start_node_id, initial_ttl)]
     found = "None"
+    totalMessages = 0
     while to_be_visited:
         current_node_label, current_ttl = to_be_visited.pop(0)
         current_node = inputGraph.data[current_node_label]
@@ -22,10 +23,11 @@ def start_flooding_search(inputGraph: Graph, start_node_id: str, desiredResource
         if current_node_label not in visited_nodes:
             visited_nodes.append(current_node_label)
             new_ttl = current_ttl - 1
+            totalMessages += 1
             ttl_history.append(current_ttl)
             for neighbor in inputGraph.data[current_node_label].neighbors:
                 to_be_visited.append((neighbor.node_id, new_ttl))
-    return {"visited": visited_nodes, "found": found, "ttl_history": ttl_history}
+    return {"visited": visited_nodes, "found": found, "ttl_history": ttl_history, "totalMessages": totalMessages}
 
 
 def search_pipeline():
