@@ -57,10 +57,10 @@ def _parse_json(json_data: dict) -> Tuple[bool, str]:
     if not (0 <= min_neighbors <= max_neighbors):
         return False, f"Invalid number of neighbors. min_neighbors should be less than or equal to {max_neighbors}."
 
-    neighbor_count = {int(node): set() for node in resources}
+    neighbor_count = {node: set() for node in resources}
     for edge in edges:
-        from_node = int(edge.get("from"))
-        to_node = int(edge.get("to"))
+        from_node = edge.get("from")
+        to_node = edge.get("to")
         if from_node in neighbor_count and to_node in neighbor_count:
             neighbor_count[from_node].add(to_node)
             neighbor_count[to_node].add(from_node)
