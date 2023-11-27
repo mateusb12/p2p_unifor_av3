@@ -36,7 +36,7 @@ def __main():
     desired_resource = "winter_chill.mp3"
     initial_ttl = 5
     functions = [flooding_search, informed_flooding_search]
-    function = informed_flooding_search
+    function = flooding_search
     visualize = True
     search_through(filename, starting_node, desired_resource, initial_ttl, function, visualize)
     return

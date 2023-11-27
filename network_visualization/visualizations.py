@@ -33,6 +33,13 @@ def _add_sliders(fig: Figure, visited_nodes: List[str], ttl_history: List[str]):
     fig.update_layout(sliders=[sliders_dict])
 
 
+NODE_SIZE = 50
+UNVISITED_NODE_COLOR = 'LightSkyBlue'
+VISITED_NODE_COLOR = 'LightCoral'
+ORIGIN_NODE_COLOR = 'Orange'
+TARGET_NODE_COLOR = 'LightGreen'
+
+
 class NetworkGraphVisualizer:
     def __init__(self, graph: nx.Graph):
         self.graph = graph
@@ -75,8 +82,9 @@ class NetworkGraphVisualizer:
         return ['<br>'.join([f'• {resource}' for resource in resources]) for resources in node_resources]
 
     def __get_node_trace(self, visited_nodes: List[str]):
-        node_colors = ['LightCoral' if node in visited_nodes else 'LightSkyBlue' for node in self.graph.nodes()]
-        node_marker_style = dict(showscale=False, size=55, line=dict(width=2, color='Black'))
+        node_colors = [VISITED_NODE_COLOR if node in visited_nodes else UNVISITED_NODE_COLOR
+                       for node in self.graph.nodes()]
+        node_marker_style = dict(showscale=False, size=NODE_SIZE, line=dict(width=2, color='Black'))
         node_trace_format = self.__get_hover_text_trace()
         return Scatter(x=self.node_x, y=self.node_y, mode='markers', hoverinfo='text', hovertemplate='%{text}',
                        text=node_trace_format, marker=dict(node_marker_style, color=node_colors))
@@ -93,9 +101,9 @@ class NetworkGraphVisualizer:
         if found != "None" and visited_nodes:
             found_node_index = visited_nodes.index(found)
             self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1,
-                                      node_index=found_node_index, color='LightGreen')
+                                      node_index=found_node_index, color=TARGET_NODE_COLOR)
             self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1, node_index=0,
-                                      color='Orange')
+                                      color=ORIGIN_NODE_COLOR)
         return frames
 
     def __change_frame_color(self, frames: List[Frame], visited_nodes: List[str], frame_index: int, node_index: int,
