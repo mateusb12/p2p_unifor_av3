@@ -36,9 +36,10 @@
   },
   "edges": [
     {"from": "node_1", "to": "node_2"},
-    {"from": "node_2", "to": "node_3"},
+    {"from": "node_2", "to": "node_9"},
+    {"from": "node_2", "to": "node_6"},
     {"from": "node_3", "to": "node_6"},
-    {"from": "node_3", "to": "node_5"},
+    {"from": "node_3", "to": "node_4"},
     {"from": "node_4", "to": "node_5"},
     {"from": "node_4", "to": "node_6"},
     {"from": "node_5", "to": "node_1"},
