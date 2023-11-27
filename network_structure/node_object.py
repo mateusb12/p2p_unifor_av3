@@ -9,6 +9,7 @@ class Node:
         self.ip = generate_random_ip_address()
         self.network = node_network
         self.cache = {}
+        self.ttl = float("inf")
 
     def add_neighbor(self, neighbor):
         """Add a neighbor to this node."""
@@ -25,7 +26,8 @@ class Node:
         return resource in self.resources
 
     def __repr__(self):
-        return f"Node({self.node_id}, Resources: {self.resources}, Neighbors: {[n.node_id for n in self.neighbors]})"
+        return (f"Node({self.node_id}, TTl: {self.ttl}, Resources: {self.resources},"
+                f" Neighbors: {[n.node_id for n in self.neighbors]})")
 
     def receive_message(self, inputMessage):
         inputMessage.ttl -= 1

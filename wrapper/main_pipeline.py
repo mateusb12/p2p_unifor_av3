@@ -17,21 +17,18 @@ def search_through(filename: str, start_node_id: str, desired_resource: str, ini
     result = function(inputGraph=custom_graph, start_node_id=start_node_id, desiredResource=desired_resource,
                       initial_ttl=initial_ttl)
     visited_nodes = result["visited"]
-    searchResult = result["found"]
-    ttl_history = result["ttl_history"]
     total_messages = result["totalMessages"]
     result["functionName"] = function.__name__
     if visualize:
         net_visualizer = NetworkGraphVisualizer(graph)
-        net_visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history,
-                                    result=result)
+        net_visualizer.plot_network(result=result)
     print(f"Algorithm chosen: {function.__name__}")
     print(f"Messages exchanged: {str(total_messages)}")
     print(f"Visited nodes: {str(visited_nodes)}")
 
 
 def __main():
-    filename = "json_example.json"
+    filename = "small_example.json"
     starting_node = "node_12"
     desired_resource = "winter_chill.mp3"
     initial_ttl = 5

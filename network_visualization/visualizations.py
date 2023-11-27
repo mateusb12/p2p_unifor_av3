@@ -42,9 +42,9 @@ TARGET_NODE_COLOR = 'LightGreen'
 
 
 class NetworkGraphVisualizer:
-    def __init__(self, graph: nx.Graph):
+    def __init__(self, graph: nx.Graph, custom_graph: Graph = None):
+        self.custom_graph = custom_graph
         self.graph = graph
-        # self.position = nx.spring_layout(graph, k=NODE_SPREAD)
         self.position = nx.kamada_kawai_layout(graph)
         self.node_x: List[float] = []
         self.node_y: List[float] = []
@@ -80,8 +80,18 @@ class NetworkGraphVisualizer:
                        hoverinfo='none', textposition="middle center", textfont=dict(color='Black', size=9))
 
     def __get_hover_text_trace(self):
-        node_resources = [item[1]['info'] for item in self.graph.nodes(data=True)]
-        return ['<br>'.join([f'• {resource}' for resource in resources]) for resources in node_resources]
+        node_data = list(self.graph.nodes(data=True))
+        node_resources = [item[1]['info'] for item in node_data]
+        node_ttl = [item[1]['ttl'] for item in node_data]
+
+        hover_texts = []
+        for resources, ttl in zip(node_resources, node_ttl):
+            resource_lines = [f'• {resource}' for resource in resources]
+            resource_lines.append(f'• TTL → {ttl}')
+            hover_text = '<br>'.join(resource_lines)
+            hover_texts.append(hover_text)
+
+        return hover_texts
 
     def __get_node_trace(self, visited_nodes: List[str]):
         node_colors = [VISITED_NODE_COLOR if node in visited_nodes else UNVISITED_NODE_COLOR
@@ -117,8 +127,10 @@ class NetworkGraphVisualizer:
         desired_frame_colors[node_index] = color
         desired_frame.data[1].marker.color = tuple(desired_frame_colors)
 
-    def plot_network(self, visited_nodes: List[str] = None, found: str = "None", ttl_history: List[str] = None,
-                     result=None):
+    def plot_network(self, result=None):
+        visited_nodes: List[str] = result["visited"]
+        found: str = result["found"]
+        ttl_history: List[str] = result["ttl_history"]
         node_x, node_y, _ = self.__get_node_plot_data()
         edge_trace = self.__create_edge_trace()
         text_trace = self.__get_text_trace()
@@ -151,17 +163,13 @@ class NetworkGraphVisualizer:
 
 
 def generate_network_graph_html(start_node_id, desired_resource, initial_ttl) -> str:
-    json_data = read_and_parse_json("json_example.json")
+    json_data = read_and_parse_json("small_example.json")
     g = Graph(json_data)
-    graph = convert_graph_to_networkx(g)
-    visualizer = NetworkGraphVisualizer(graph)
     result = flooding_search(inputGraph=g, start_node_id=start_node_id, desiredResource=desired_resource,
                              initial_ttl=initial_ttl)
-    visited_nodes = result["visited"]
-    searchResult = result["found"]
-    ttl_history = result["ttl_history"]
-
-    fig = visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
+    graph = convert_graph_to_networkx(g)
+    visualizer = NetworkGraphVisualizer(graph, g)
+    fig = visualizer.plot_network(result=result)
     graph_html = fig.to_html(fig, full_html=False)
     return graph_html
 

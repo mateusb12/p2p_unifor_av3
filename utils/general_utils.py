@@ -15,7 +15,7 @@ def convert_graph_to_networkx(input_graph) -> nx.Graph:
     G = nx.Graph()
     for node in input_graph.data.values():
         node_to_be_added = node.node_id
-        G.add_node(node_to_be_added, info=node.resources)
+        G.add_node(node_to_be_added, info=node.resources, ttl=node.ttl)
         for neighbor in node.neighbors:
             G.add_edge(node.node_id, neighbor.node_id)
     return G
