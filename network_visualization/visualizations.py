@@ -107,13 +107,18 @@ class NetworkGraphVisualizer:
         desired_frame_colors[node_index] = color
         desired_frame.data[1].marker.color = tuple(desired_frame_colors)
 
-    def plot_network(self, visited_nodes: List[str] = None, found: str = "None", ttl_history: List[str] = None):
+    def plot_network(self, visited_nodes: List[str] = None, found: str = "None", ttl_history: List[str] = None,
+                     result=None):
         node_x, node_y, _ = self.__get_node_plot_data()
         edge_trace = self.__create_edge_trace()
         text_trace = self.__get_text_trace()
         node_trace_original = self.__get_node_trace([])
 
-        layout = go.Layout(title='<br>Network graph made with Python', titlefont=dict(size=16),
+        messageAmount = result["totalMessages"]
+        functionName = result["functionName"]
+        layout = go.Layout(title=f'Function → {functionName}<br>Message amount → {messageAmount}'
+                                 f'<br>Nodes visited → {len(visited_nodes)}',
+                           titlefont=dict(size=16),
                            showlegend=False, hovermode='closest', margin=dict(b=20, l=5, r=5, t=40),
                            annotations=[dict(text="Python code: <a href='https://plotly.com/'> Plotly</a>",
                                              showarrow=False, xref="paper", yref="paper", x=0.005, y=-0.002)],

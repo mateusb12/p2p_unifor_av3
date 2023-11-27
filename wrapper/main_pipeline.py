@@ -19,13 +19,14 @@ def search_through(filename: str, start_node_id: str, desired_resource: str, ini
     searchResult = result["found"]
     ttl_history = result["ttl_history"]
     total_messages = result["totalMessages"]
+    result["functionName"] = function.__name__
     if visualize:
         net_visualizer = NetworkGraphVisualizer(graph)
-        net_visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history)
+        net_visualizer.plot_network(visited_nodes=visited_nodes, found=searchResult, ttl_history=ttl_history,
+                                    result=result)
     print(f"Algorithm chosen: {function.__name__}")
     print(f"Messages exchanged: {str(total_messages)}")
     print(f"Visited nodes: {str(visited_nodes)}")
-    return result
 
 
 def __main():
@@ -35,7 +36,7 @@ def __main():
     initial_ttl = 3
     function = start_flooding_search
     visualize = True
-    result = search_through(filename, starting_node, desired_resource, initial_ttl, function, visualize)
+    search_through(filename, starting_node, desired_resource, initial_ttl, function, visualize)
     return
 
 
