@@ -4,7 +4,7 @@ from plotly.graph_objs import Scatter, Figure, Frame
 
 from core_search.fundamental_searches import dfs_search, bfs_search
 from json_parsing.json_read import read_and_parse_json
-from network_search.flooding_search import search_pipeline, start_flooding_search
+from network_search.flooding_search import search_pipeline, flooding_search
 from network_structure.graph_object import Graph
 import plotly.offline as pyo
 import plotly.graph_objs as go
@@ -145,8 +145,8 @@ def generate_network_graph_html(start_node_id, desired_resource, initial_ttl) ->
     g = Graph(json_data)
     graph = convert_graph_to_networkx(g)
     visualizer = NetworkGraphVisualizer(graph)
-    result = start_flooding_search(inputGraph=g, start_node_id=start_node_id, desiredResource=desired_resource,
-                                   initial_ttl=initial_ttl)
+    result = flooding_search(inputGraph=g, start_node_id=start_node_id, desiredResource=desired_resource,
+                             initial_ttl=initial_ttl)
     visited_nodes = result["visited"]
     searchResult = result["found"]
     ttl_history = result["ttl_history"]
