@@ -1,5 +1,6 @@
 from json_parsing.json_read import read_and_parse_json
 from network_search.flooding_search import flooding_search
+from network_search.informed_flooding_search import informed_flooding_search
 from network_structure.graph_object import Graph
 from network_visualization.visualizations import NetworkGraphVisualizer, generate_network_graph_html
 from utils.general_utils import convert_graph_to_networkx
@@ -32,9 +33,10 @@ def search_through(filename: str, start_node_id: str, desired_resource: str, ini
 def __main():
     filename = "json_example.json"
     starting_node = "node_12"
-    desired_resource = "mystic_river.mp3"
-    initial_ttl = 3
-    function = flooding_search
+    desired_resource = "winter_chill.mp3"
+    initial_ttl = 5
+    functions = [flooding_search, informed_flooding_search]
+    function = informed_flooding_search
     visualize = True
     search_through(filename, starting_node, desired_resource, initial_ttl, function, visualize)
     return

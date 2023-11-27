@@ -8,6 +8,7 @@ class Node:
         self.neighbors = []
         self.ip = generate_random_ip_address()
         self.network = node_network
+        self.cache = {}
 
     def add_neighbor(self, neighbor):
         """Add a neighbor to this node."""

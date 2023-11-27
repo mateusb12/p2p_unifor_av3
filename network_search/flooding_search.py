@@ -2,6 +2,7 @@ from json_parsing.json_read import read_json
 from network_parse.dfs_parse import parse_graph
 from network_structure.network_message import NetworkMessage
 from network_structure.graph_object import Graph
+from network_structure.node_object import Node
 
 
 def flooding_search(inputGraph: Graph, start_node_id: str, desiredResource: str, initial_ttl: int = 5) -> dict:
