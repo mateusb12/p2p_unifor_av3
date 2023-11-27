@@ -175,7 +175,7 @@ def generate_network_graph_html(start_node_id, desired_resource, initial_ttl) ->
 
 
 def __main():
-    aux = generate_network_graph_html(start_node_id="node_12", desired_resource="sunny_day.mp3", initial_ttl=4)
+    aux = generate_network_graph_html(start_node_id="node_12", desired_resource="cosmic_journey.mp3", initial_ttl=2)
     return
 
 
