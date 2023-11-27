@@ -39,10 +39,13 @@ def informed_flooding_search(inputGraph: Graph, start_node_id: str, desiredResou
 
     # Backtracking to find the path
     if found != "None":
-        backtrack_node = found
-        while backtrack_node:
-            backtrack_path.insert(0, backtrack_node)
-            backtrack_node = last_visited_info.get(backtrack_node)
+        target_node_ip = inputGraph.data[found].ip
+        backtrack_node_label = found
+        while backtrack_node_label:
+            backtrack_path.insert(0, backtrack_node_label)
+            back_track_node: Node = inputGraph.data[backtrack_node_label]
+            back_track_node.cache[desiredResource] = {"node_id": found, "node_ip": target_node_ip}
+            backtrack_node_label = last_visited_info.get(backtrack_node_label)
 
     backtrack_path = backtrack_path[::-1]
 
