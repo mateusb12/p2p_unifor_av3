@@ -34,6 +34,7 @@ def _add_sliders(fig: Figure, visited_nodes: List[str], ttl_history: List[str]):
 
 
 NODE_SIZE = 50
+NODE_SPREAD = 0.8
 UNVISITED_NODE_COLOR = 'LightSkyBlue'
 VISITED_NODE_COLOR = 'LightCoral'
 ORIGIN_NODE_COLOR = 'Orange'
@@ -43,7 +44,8 @@ TARGET_NODE_COLOR = 'LightGreen'
 class NetworkGraphVisualizer:
     def __init__(self, graph: nx.Graph):
         self.graph = graph
-        self.position = nx.spring_layout(graph)
+        # self.position = nx.spring_layout(graph, k=NODE_SPREAD)
+        self.position = nx.kamada_kawai_layout(graph)
         self.node_x: List[float] = []
         self.node_y: List[float] = []
         self.node_resources: List[str] = []
