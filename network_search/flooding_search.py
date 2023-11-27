@@ -22,13 +22,13 @@ def flooding_search(inputGraph: Graph, start_node_id: str, desiredResource: str,
         current_node_label, current_ttl = to_be_visited.pop(0)
         current_node: Node = inputGraph.data[current_node_label]
         __set_ttl(input_node=current_node, new_ttl=current_ttl)
-        # current_node.ttl = copy.deepcopy(current_ttl)
         if desiredResource in current_node.resources:
             visited_nodes.append(current_node_label)
             ttl_history.append(current_ttl)
             found = current_node_label
             continue
         if current_ttl <= 0:
+            visited_nodes.append(current_node_label)
             continue
         if current_node_label not in visited_nodes:
             visited_nodes.append(current_node_label)
