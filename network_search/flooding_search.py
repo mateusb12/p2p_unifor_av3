@@ -29,15 +29,17 @@ def flooding_search(inputGraph: Graph, start_node_id: str, desiredResource: str,
             continue
         if current_ttl <= 0:
             visit_order.append(current_node_label)
+            ttl_history.append(current_ttl)
             continue
         if current_node_label not in visit_order:
             visit_order.append(current_node_label)
             new_ttl = current_ttl - 1
             ttl_history.append(current_ttl)
             for neighbor in inputGraph.data[current_node_label].neighbors:
-                if neighbor not in visit_order and new_ttl >= 0:
+                if neighbor.node_id not in visit_order and new_ttl >= 0:
                     totalMessages += 1
                     to_be_visited.append((neighbor.node_id, new_ttl))
+                    inputGraph.data[neighbor.node_id].previous = current_node
     found_node = inputGraph.data[found] if found != "None" else None
     return {"visited": visit_order, "found": found, "ttl_history": ttl_history, "totalMessages": totalMessages,
             "targetNode": found_node, "functionName": flooding_search.__name__}
@@ -47,7 +49,7 @@ def search_pipeline():
     json_data = read_json("small_example.json")
     g = Graph(json_data)
     parse_res = parse_graph(inputGraph=g, graphRestraints=json_data)
-    res = flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="summer_samba.mp3",
+    res = flooding_search(inputGraph=g, start_node_id="node_12", desiredResource="sunny_day.mp3",
                           initial_ttl=4)
     return
 

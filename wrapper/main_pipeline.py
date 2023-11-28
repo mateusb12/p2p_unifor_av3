@@ -13,15 +13,15 @@ def search_through(filename: str, start_node_id: str, desired_resource: str, ini
         print(json_data)
         return
     custom_graph = Graph(json_data)
-    graph = convert_graph_to_networkx(custom_graph)
     result = function(inputGraph=custom_graph, start_node_id=start_node_id, desiredResource=desired_resource,
                       initial_ttl=initial_ttl)
-    visited_nodes = result["visited"]
-    total_messages = result["totalMessages"]
+    graph = convert_graph_to_networkx(custom_graph)
     result["functionName"] = function.__name__
     if visualize:
         net_visualizer = NetworkGraphVisualizer(graph)
         net_visualizer.plot_network(result=result)
+    visited_nodes = result["visited"]
+    total_messages = result["totalMessages"]
     print(f"Algorithm chosen: {function.__name__}")
     print(f"Messages exchanged: {str(total_messages)}")
     print(f"Visited nodes: {str(visited_nodes)}")
@@ -30,8 +30,8 @@ def search_through(filename: str, start_node_id: str, desired_resource: str, ini
 def __main():
     filename = "small_example.json"
     starting_node = "node_12"
-    desired_resource = "winter_chill.mp3"
-    initial_ttl = 5
+    desired_resource = "sunny_day.mp3"
+    initial_ttl = 4
     functions = [flooding_search, informed_flooding_search]
     function = flooding_search
     visualize = True

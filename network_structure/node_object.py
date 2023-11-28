@@ -10,6 +10,7 @@ class Node:
         self.network = node_network
         self.cache = {}
         self.ttl = float("inf")
+        self.previous = None
 
     def add_neighbor(self, neighbor):
         """Add a neighbor to this node."""
