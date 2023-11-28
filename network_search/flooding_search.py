@@ -1,10 +1,19 @@
 import copy
+from typing import List
 
 from json_parsing.json_read import read_json
 from network_parse.dfs_parse import parse_graph
 from network_structure.network_message import NetworkMessage
 from network_structure.graph_object import Graph
 from network_structure.node_object import Node
+
+
+def __get_backtracking_list(target_node: Node) -> List[str]:
+    backtrack_list = [target_node.node_id]
+    while target_node.previous is not None:
+        target_node = target_node.previous
+        backtrack_list.append(target_node.node_id)
+    return backtrack_list
 
 
 def __set_ttl(input_node: Node, new_ttl: int):
@@ -42,7 +51,8 @@ def flooding_search(inputGraph: Graph, start_node_id: str, desiredResource: str,
                     inputGraph.data[neighbor.node_id].previous = current_node
     found_node = inputGraph.data[found] if found != "None" else None
     return {"visited": visit_order, "found": found, "ttl_history": ttl_history, "totalMessages": totalMessages,
-            "targetNode": found_node, "functionName": flooding_search.__name__}
+            "targetNode": found_node, "functionName": flooding_search.__name__,
+            "backtrack": __get_backtracking_list(found_node)}
 
 
 def search_pipeline():

@@ -39,6 +39,7 @@ UNVISITED_NODE_COLOR = 'LightSkyBlue'
 VISITED_NODE_COLOR = 'LightCoral'
 ORIGIN_NODE_COLOR = 'Orange'
 TARGET_NODE_COLOR = 'LightGreen'
+PATH_NODE_COLOR = 'Orchid'
 
 
 class NetworkGraphVisualizer:
@@ -102,7 +103,7 @@ class NetworkGraphVisualizer:
                        text=node_trace_format, marker=dict(node_marker_style, color=node_colors))
 
     def __get_animation_frames(self, edge_trace: Scatter, text_trace: Scatter, node_trace: Scatter,
-                               visited_nodes: List[str], found: str = "None"):
+                               visited_nodes: List[str], found: str = "None", backtrack: List[str] = None):
         frames = [Frame(data=[edge_trace, node_trace, text_trace], name='frame1')]
         for i, node in enumerate(visited_nodes):
             nodes_subset = visited_nodes[:i + 1]
@@ -111,12 +112,21 @@ class NetworkGraphVisualizer:
             frames.append(go.Frame(data=[edge_trace, node_trace, text_trace], name=frame_name))
 
         if found != "None" and visited_nodes:
-            found_node_index = visited_nodes.index(found)
-            self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1,
-                                      node_index=found_node_index, color=TARGET_NODE_COLOR)
-            self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1, node_index=0,
-                                      color=ORIGIN_NODE_COLOR)
+            for index, item in enumerate(backtrack):
+                self.__apply_color_to_back_track(backtrack, frames, index, item, visited_nodes)
         return frames
+
+    def __apply_color_to_back_track(self, backtrack: List[str], frames: List[Frame], index: int, item: str,
+                                    visited_nodes: List[str]):
+        if index == 0:
+            color = TARGET_NODE_COLOR
+        elif index == len(backtrack) - 1:
+            color = ORIGIN_NODE_COLOR
+        else:
+            color = PATH_NODE_COLOR
+        found_node_index = visited_nodes.index(item)
+        self.__change_frame_color(frames=frames, visited_nodes=visited_nodes, frame_index=-1,
+                                  node_index=found_node_index, color=color)
 
     def __change_frame_color(self, frames: List[Frame], visited_nodes: List[str], frame_index: int, node_index: int,
                              color: str):
@@ -152,7 +162,7 @@ class NetworkGraphVisualizer:
 
         frames = self.__get_animation_frames(edge_trace=edge_trace, text_trace=text_trace,
                                              node_trace=node_trace_original, visited_nodes=visited_nodes,
-                                             found=found)
+                                             found=found, backtrack=result["backtrack"])
         fig.frames = frames
 
         _add_sliders(fig, visited_nodes, ttl_history)
@@ -163,7 +173,7 @@ class NetworkGraphVisualizer:
 
 
 def generate_network_graph_html(start_node_id, desired_resource, initial_ttl) -> str:
-    json_data = read_and_parse_json("small_example.json")
+    json_data = read_and_parse_json("json_example.json")
     g = Graph(json_data)
     result = flooding_search(inputGraph=g, start_node_id=start_node_id, desiredResource=desired_resource,
                              initial_ttl=initial_ttl)
@@ -175,7 +185,7 @@ def generate_network_graph_html(start_node_id, desired_resource, initial_ttl) ->
 
 
 def __main():
-    aux = generate_network_graph_html(start_node_id="node_12", desired_resource="cosmic_journey.mp3", initial_ttl=2)
+    aux = generate_network_graph_html(start_node_id="node_12", desired_resource="arctic_aurora.mp3", initial_ttl=7)
     return
 
 
