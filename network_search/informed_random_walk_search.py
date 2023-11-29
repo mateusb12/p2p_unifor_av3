@@ -12,13 +12,19 @@ def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, des
     ttl = initial_ttl
 
     while ttl > 0:
+        cached_result = inputGraph.get_cached_result(current_node)
+        if cached_result:
+            return cached_result
+
         neighbors = inputGraph.get_neighbors(current_node)
 
         neighbors_with_resource = [neighbor for neighbor in neighbors
                                    if desiredResource in inputGraph.get_node_resources(neighbor)]
 
         if not neighbors_with_resource:
-            return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history}
+            result = {"visited": visited_nodes, "found": False, "ttl_history": ttl_history}
+            inputGraph.update_cache(current_node, result)
+            return result
 
         next_node = random.choice(neighbors_with_resource)
 
@@ -29,9 +35,13 @@ def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, des
         ttl_history.append(ttl)
 
         if desiredResource in inputGraph.get_node_resources(current_node):
-            return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history}
+            result = {"visited": visited_nodes, "found": True, "ttl_history": ttl_history}
+            inputGraph.update_cache(current_node, result)
+            return result
 
-    return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history}
+    result = {"visited": visited_nodes, "found": False, "ttl_history": ttl_history}
+    inputGraph.update_cache(current_node, result)
+    return result
 
 
 def __main():
