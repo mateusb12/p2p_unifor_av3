@@ -2,6 +2,19 @@ from json_parsing.json_read import read_json
 from network_parse.dfs_parse import parse_graph
 from network_structure.graph_object import Graph
 
+def get_neighbors(self, node_id):
+        #
+        return self.graph_data[node_id]['neighbors']
+
+    def get_node_resources(self, node_id):
+        #
+        return self.graph_data[node_id].get('resources', [])
+
+    def update_cache(self, node_id, result):
+        self.cache[node_id] = result
+
+    def get_cached_result(self, node_id):
+        return self.cache.get(node_id)
 
 def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, desiredResource: str,
                                       initial_ttl: int = 5) -> dict:
