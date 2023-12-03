@@ -6,7 +6,7 @@ def __init__(self, data):
         #
         self.graph_data = data
 
-    def get_neighbors(self, node_id):
+def get_neighbors(self, node_id):
         #
         return self.graph_data[node_id]['neighbors']
 
