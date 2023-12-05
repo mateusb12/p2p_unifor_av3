@@ -12,16 +12,6 @@ class Node:
         self.ttl = float("inf")
         self.previous = None
 
-    def add_neighbor(self, neighbor):
-        """Add a neighbor to this node."""
-        if neighbor not in self.neighbors:
-            self.neighbors.append(neighbor)
-
-    def remove_neighbor(self, neighbor):
-        """Remove a neighbor from this node."""
-        if neighbor in self.neighbors:
-            self.neighbors.remove(neighbor)
-
     def has_resource(self, resource: str) -> bool:
         """Check if the node has a specific resource."""
         return resource in self.resources
@@ -44,12 +34,22 @@ class Node:
     def broadcast_message(self, inputMessage):
         sender_id = inputMessage.last_sender
         for neighbor in self.neighbors:
-            if neighbor.node_id != sender_id:  # Avoid sending back to the sender
+            if neighbor.node_id != sender_id:
                 neighbor.receive_message(inputMessage)
 
     def send_response(self, message):
         # Implement the logic to send the response back to the origin
         pass
+
+    def add_neighbor(self, neighbor):
+        """Add a neighbor to this node."""
+        if neighbor not in self.neighbors:
+            self.neighbors.append(neighbor)
+
+    def remove_neighbor(self, neighbor):
+        """Remove a neighbor from this node."""
+        if neighbor in self.neighbors:
+            self.neighbors.remove(neighbor)
 
 
 def __main():

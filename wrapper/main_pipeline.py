@@ -32,10 +32,10 @@ def __main():
     starting_node = "node_12"
     desired_resource = "sunny_day.mp3"
     initial_ttl = 4
-    functions = [flooding_search, informed_flooding_search]
-    function = flooding_search
+    function_pool = [flooding_search, informed_flooding_search]
+    chosen_function = flooding_search
     visualize = True
-    search_through(filename, starting_node, desired_resource, initial_ttl, function, visualize)
+    search_through(filename, starting_node, desired_resource, initial_ttl, chosen_function, visualize)
     return
 
 
