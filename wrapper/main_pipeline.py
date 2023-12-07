@@ -6,8 +6,7 @@ from network_visualization.visualizations import NetworkGraphVisualizer, generat
 from utils.general_utils import convert_graph_to_networkx
 
 
-def search_through(filename: str, start_node_id: str, desired_resource: str, initial_ttl: int, function,
-                   visualize: bool):
+def get_search_result(filename: str, start_node_id: str, desired_resource: str, initial_ttl: int, function):
     json_data = read_and_parse_json(filename)
     if not isinstance(json_data, dict):
         print(json_data)
@@ -15,13 +14,19 @@ def search_through(filename: str, start_node_id: str, desired_resource: str, ini
     custom_graph = Graph(json_data)
     result = function(inputGraph=custom_graph, start_node_id=start_node_id, desiredResource=desired_resource,
                       initial_ttl=initial_ttl)
-    graph = convert_graph_to_networkx(custom_graph)
     result["functionName"] = function.__name__
-    if visualize:
-        net_visualizer = NetworkGraphVisualizer(graph)
-        net_visualizer.plot_network(result=result)
-    visited_nodes = result["visited"]
-    total_messages = result["totalMessages"]
+    result["customGraph"] = custom_graph
+    return result
+
+
+def visualize_search(search_result: dict):
+    custom_graph = search_result["customGraph"]
+    function = search_result["functionName"]
+    graph = convert_graph_to_networkx(custom_graph)
+    net_visualizer = NetworkGraphVisualizer(graph)
+    net_visualizer.plot_network(result=search_result)
+    visited_nodes = search_result["visited"]
+    total_messages = search_result["totalMessages"]
     print(f"Algorithm chosen: {function.__name__}")
     print(f"Messages exchanged: {str(total_messages)}")
     print(f"Visited nodes: {str(visited_nodes)}")
@@ -34,8 +39,8 @@ def __main():
     initial_ttl = 4
     function_pool = [flooding_search, informed_flooding_search]
     chosen_function = flooding_search
-    visualize = True
-    search_through(filename, starting_node, desired_resource, initial_ttl, chosen_function, visualize)
+    result = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
+    visualize_search(result)
     return
 
 
