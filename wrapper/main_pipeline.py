@@ -33,10 +33,10 @@ def visualize_search(search_result: dict):
 
 
 def __main():
-    filename = "small_example.json"
-    starting_node = "node_12"
-    desired_resource = "sunny_day.mp3"
-    initial_ttl = 4
+    filename = "json_example.json"
+    starting_node = "node_21"
+    desired_resource = "celestial_harmony.mp3"
+    initial_ttl = 10
     function_pool = [flooding_search, informed_flooding_search]
     chosen_function = flooding_search
     result = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
