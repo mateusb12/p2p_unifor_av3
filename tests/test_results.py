@@ -25,8 +25,10 @@ def loop_through_tests(input_df: pd.DataFrame):
         result = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
         nodes_visited = len(result["visited"])
         total_messages = result["totalMessages"]
-        row["nodes_visited"] = nodes_visited
-        row["total_messages"] = total_messages
+        input_df.at[index, "nodes_visited"] = nodes_visited
+        input_df.at[index, "message_amount"] = total_messages
+    input_df["nodes_visited"] = input_df["nodes_visited"].astype(int)
+    input_df["message_amount"] = input_df["message_amount"].astype(int)
     input_df.to_csv(Path(get_network_tests_path(), TEST_FILENAME), index=False)
 
 
