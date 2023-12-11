@@ -1,0 +1,2 @@
+filename,starting_node,target_resource,initial_ttl,function,batch,nodes_visited,message_amount
+json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34

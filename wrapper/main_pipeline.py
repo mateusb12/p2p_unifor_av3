@@ -4,6 +4,7 @@ from network_search.informed_flooding_search import informed_flooding_search
 from network_structure.graph_object import Graph
 from network_visualization.visualizations import NetworkGraphVisualizer, generate_network_graph_html
 from utils.general_utils import convert_graph_to_networkx
+import sys
 
 
 def get_search_result(filename: str, start_node_id: str, desired_resource: str, initial_ttl: int, function):
@@ -33,6 +34,7 @@ def visualize_search(search_result: dict):
 
 
 def run_batch(visualize: bool = True):
+    print(list(sys.path))
     filename = "json_example.json"
     starting_node = "node_21"
     desired_resource = "celestial_harmony.mp3"

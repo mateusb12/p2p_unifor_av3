@@ -29,7 +29,7 @@ def get_network_tests_path() -> Path:
     Returns the path of the folder containing the json files.
     :return: Path
     """
-    return get_main_folder_path() / "network_tests"
+    return get_main_folder_path() / "tests"
 
 
 append_main_folder_to_sys()
