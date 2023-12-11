@@ -32,7 +32,7 @@ def visualize_search(search_result: dict):
     print(f"Visited nodes: {str(visited_nodes)}")
 
 
-def __main():
+def run_batch(visualize: bool = True):
     filename = "json_example.json"
     starting_node = "node_21"
     desired_resource = "celestial_harmony.mp3"
@@ -40,8 +40,16 @@ def __main():
     function_pool = [flooding_search, informed_flooding_search]
     chosen_function = flooding_search
     result = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
-    visualize_search(result)
+    final_result = {"starting_node": starting_node, "target_resource": desired_resource, "initial_ttl": initial_ttl,
+                    "function": str(chosen_function), "nodes_visited": len(result["visited"]),
+                    "total_messages": result["totalMessages"]}
+    if visualize:
+        visualize_search(result)
     return
+
+
+def __main():
+    run_batch()
 
 
 if __name__ == "__main__":
