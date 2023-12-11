@@ -24,6 +24,14 @@ def get_json_files_path() -> Path:
     return get_main_folder_path() / "json_parsing/json_files"
 
 
+def get_network_tests_path() -> Path:
+    """
+    Returns the path of the folder containing the json files.
+    :return: Path
+    """
+    return get_main_folder_path() / "network_tests"
+
+
 append_main_folder_to_sys()
 
 
