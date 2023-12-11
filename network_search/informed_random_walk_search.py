@@ -9,6 +9,7 @@ def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, des
                                       initial_ttl: int = 5) -> dict:
     visited_nodes = []
     ttl_history = []
+    message_count = 0
 
     current_node_id = start_node_id
     ttl = initial_ttl
@@ -18,17 +19,20 @@ def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, des
         ttl_history.append(ttl)
 
         if desiredResource in inputGraph.get_node_resources(current_node_id):
-            return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history}
+            return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history, "message_amount": message_count}
 
-        neighbors = [neighbor.node_id for neighbor in inputGraph.data[current_node_id].neighbors]
+        neighbors = inputGraph.data[current_node_id].neighbors
 
         if neighbors:
-            current_node_id = random.choice(neighbors)
+            next_node = random.choice(neighbors)
+            message_count += 1
+            current_node_id = next_node.node_id
         else:
             break
+
         ttl -= 1
 
-    return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history}
+    return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "message_amount": message_count}
 
 
 def __main():
@@ -40,6 +44,6 @@ def __main():
     result = start_informed_random_walk_search(g, start_node_id="node_1", desiredResource="dancing_moon.mp3")
     print(result)
 
+
 if __name__ == "__main__":
     __main()
-
