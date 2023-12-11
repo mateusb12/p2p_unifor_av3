@@ -20,7 +20,7 @@ def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, des
         if desiredResource in inputGraph.get_node_resources(current_node_id):
             return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history}
 
-        neighbors = [neighbor.node_id for neighbor in inputGraph.data[current_node_id].get_neighbors()]
+        neighbors = [neighbor.node_id for neighbor in inputGraph.data[current_node_id].neighbors]
 
         if neighbors:
             current_node_id = random.choice(neighbors)
