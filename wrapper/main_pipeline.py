@@ -28,7 +28,7 @@ def visualize_search(search_result: dict):
     net_visualizer.plot_network(result=search_result)
     visited_nodes = search_result["visited"]
     total_messages = search_result["totalMessages"]
-    print(f"Algorithm chosen: {function.__name__}")
+    print(f"Algorithm chosen: {function}")
     print(f"Messages exchanged: {str(total_messages)}")
     print(f"Visited nodes: {str(visited_nodes)}")
 
@@ -37,11 +37,12 @@ def run_batch(visualize: bool = True):
     print(list(sys.path))
     filename = "json_example.json"
     starting_node = "node_21"
-    desired_resource = "celestial_harmony.mp3"
+    desired_resource = "nebula_nights.mp3"
     initial_ttl = 10
     function_pool = [flooding_search, informed_flooding_search]
-    chosen_function = flooding_search
-    result = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
+    chosen_function = informed_flooding_search
+    # result_aux = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
+    result = get_search_result(filename, starting_node, desired_resource, 11, chosen_function)
     final_result = {"starting_node": starting_node, "target_resource": desired_resource, "initial_ttl": initial_ttl,
                     "function": str(chosen_function), "nodes_visited": len(result["visited"]),
                     "total_messages": result["totalMessages"]}
