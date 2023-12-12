@@ -11,6 +11,18 @@ from technologies.mock_data import users
 class UserType(graphene.ObjectType):
     name = graphene.String()
     email = graphene.String()
+    friends = graphene.List(graphene.String)
+    posts = graphene.List(graphene.String)
+    activity = graphene.JSONString()
+
+    def resolve_friends(self, info):
+        return self.friends
+
+    def resolve_posts(self, info):
+        return self.posts
+
+    def resolve_activity(self, info):
+        return self.activity
 
 
 class Query(graphene.ObjectType):
@@ -34,6 +46,7 @@ async def graphql_server(request: Request):
     if result.errors:
         return JSONResponse({"errors": [str(error) for error in result.errors]})
     return JSONResponse({"data": result.data})
+
 
 # To run the server: uvicorn your_script_name:app --reload
 if __name__ == "__main__":

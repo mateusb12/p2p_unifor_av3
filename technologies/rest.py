@@ -4,10 +4,10 @@ from technologies.mock_data import users, posts
 
 app = Flask(__name__)
 
+
 # Mock data
 
 
-# Endpoint to get user profile
 @app.route('/users/<user_id>', methods=['GET'])
 def get_user(user_id):
     user = users.get(user_id, {})
