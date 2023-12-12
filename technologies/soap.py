@@ -21,11 +21,13 @@ application = Application([WeatherService],
 
 # Deploy the application using a WSGI server
 if __name__ == '__main__':
-    server = make_server('127.0.0.1', 8000, WsgiApplication(application))
+    HOST = '127.0.0.1'
+    PORT = 8000
+    server = make_server(HOST, PORT, WsgiApplication(application))
     print("SOAP service is running...")
 
     # The WSDL can be accessed at http://127.0.0.1:8000/?wsdl
-    print("WSDL is at: http://127.0.0.1:8000/?wsdl")
+    print(f"WSDL is at: http://{HOST}:{PORT}/?wsdl")
 
     try:
         server.serve_forever()
