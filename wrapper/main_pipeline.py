@@ -41,15 +41,15 @@ def visualize_search(search_result: dict):
 def run_batch(visualize: bool = True):
     print(list(sys.path))
     filename = "json_example.json"
-    starting_node = "node_21"
-    desired_resource = "nebula_nights.mp3"
-    initial_ttl = 10
+    starting_node = "node_15"
+    desired_resource = "savanna_sunset.mp3"
+    initial_ttl = 50
     function_pool = [flooding_search, informed_flooding_search,
                      start_random_walk_search, start_informed_random_walk_search]
     chosen_function = start_random_walk_search
     graph = get_graph(filename)
     # result_aux = get_search_result(graph, starting_node, desired_resource, initial_ttl, chosen_function)
-    result = get_search_result(graph, starting_node, desired_resource, 11, chosen_function)
+    result = get_search_result(graph, starting_node, desired_resource, 20, chosen_function)
     final_result = {"starting_node": starting_node, "target_resource": desired_resource, "initial_ttl": initial_ttl,
                     "function": str(chosen_function), "nodes_visited": len(result["visited"]),
                     "total_messages": result["totalMessages"]}

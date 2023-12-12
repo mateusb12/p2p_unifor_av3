@@ -1,5 +1,7 @@
+import random
 from typing import List
 
+from network_structure.graph_object import Graph
 from network_structure.node_object import Node
 
 
@@ -26,7 +28,14 @@ def _check_found_condition(desired_resource: str, current_node: Node, use_cache:
     return False
 
 
-def _flooding_helper(inputGraph, start_node_id, desiredResource, initial_ttl, use_cache):
+def _update_cache(desiredResource, found_node):
+    current_node: Node = found_node
+    while current_node.previous is not None:
+        current_node.cache[desiredResource] = current_node.previous.node_id
+        current_node = current_node.previous
+
+
+def _flooding_helper(inputGraph: Graph, start_node_id: str, desiredResource: str, initial_ttl: int, use_cache: bool):
     visit_order = []
     ttl_history = []
     to_be_visited = [(start_node_id, initial_ttl)]
@@ -63,8 +72,52 @@ def _flooding_helper(inputGraph, start_node_id, desiredResource, initial_ttl, us
 
     found_node = inputGraph.data[found] if found != "None" else None
     if use_cache:
-        current_node: Node = found_node
-        while current_node.previous is not None:
-            current_node.cache[desiredResource] = current_node.previous.node_id
-            current_node = current_node.previous
+        _update_cache(desiredResource, found_node)
+    return visit_order, found, ttl_history, totalMessages, found_node
+
+
+def _random_walk_helper(inputGraph, start_node_id, desiredResource, initial_ttl, use_cache):
+    visit_order = []
+    ttl_history = []
+    stack = [start_node_id]
+    found = "None"
+    totalMessages = 0
+    visited = set()
+
+    while stack and initial_ttl > 0:
+        current_node_label = stack.pop()
+        if current_node_label in visited:
+            continue
+
+        visited.add(current_node_label)
+        current_node = inputGraph.data[current_node_label]
+        current_node.ttl = initial_ttl
+        initial_ttl -= 1  # Decrement TTL as we go deeper
+        print(f"Current Node: {current_node_label}, TTL: {initial_ttl}")
+
+        # Check if the current node contains the desired resource
+        if _check_found_condition(desired_resource=desiredResource, current_node=current_node, use_cache=use_cache):
+            found = current_node_label
+            visit_order.append(current_node_label)
+            ttl_history.append(initial_ttl)
+            break
+
+        visit_order.append(current_node_label)
+        ttl_history.append(initial_ttl)
+
+        # Randomly select a neighbor to visit next
+        if current_node.neighbors:
+            # Shuffle the neighbors to ensure random selection
+            neighbors = list(current_node.neighbors)
+            random.shuffle(neighbors)
+            # Push all neighbors onto the stack, they will be visited in random order
+            for neighbor in neighbors:
+                if neighbor.node_id not in visited:
+                    stack.append(neighbor.node_id)
+                    totalMessages += 1
+
+    found_node = inputGraph.data[found] if found != "None" else None
+    if use_cache and found_node:
+        _update_cache(found_node, desiredResource)
+
     return visit_order, found, ttl_history, totalMessages, found_node
