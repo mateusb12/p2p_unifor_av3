@@ -26,7 +26,7 @@ def _check_found_condition(desired_resource: str, current_node: Node, use_cache:
     return False
 
 
-def _search_helper(inputGraph, start_node_id, desiredResource, initial_ttl, use_cache):
+def _flooding_helper(inputGraph, start_node_id, desiredResource, initial_ttl, use_cache):
     visit_order = []
     ttl_history = []
     to_be_visited = [(start_node_id, initial_ttl)]
@@ -62,4 +62,9 @@ def _search_helper(inputGraph, start_node_id, desiredResource, initial_ttl, use_
                     inputGraph.data[neighbor.node_id].previous = current_node
 
     found_node = inputGraph.data[found] if found != "None" else None
+    if use_cache:
+        current_node: Node = found_node
+        while current_node.previous is not None:
+            current_node.cache[desiredResource] = current_node.previous.node_id
+            current_node = current_node.previous
     return visit_order, found, ttl_history, totalMessages, found_node

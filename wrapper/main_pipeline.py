@@ -1,18 +1,23 @@
 from json_parsing.json_read import read_and_parse_json
 from network_search.flooding_search import flooding_search
 from network_search.informed_flooding_search import informed_flooding_search
+from network_search.informed_random_walk_search import start_informed_random_walk_search
+from network_search.random_walk_search import start_random_walk_search
 from network_structure.graph_object import Graph
 from network_visualization.visualizations import NetworkGraphVisualizer, generate_network_graph_html
 from utils.general_utils import convert_graph_to_networkx
 import sys
 
 
-def get_search_result(filename: str, start_node_id: str, desired_resource: str, initial_ttl: int, function):
+def get_graph(filename: str):
     json_data = read_and_parse_json(filename)
     if not isinstance(json_data, dict):
         print(json_data)
         return
-    custom_graph = Graph(json_data)
+    return Graph(json_data)
+
+
+def get_search_result(custom_graph: Graph, start_node_id: str, desired_resource: str, initial_ttl: int, function):
     result = function(inputGraph=custom_graph, start_node_id=start_node_id, desiredResource=desired_resource,
                       initial_ttl=initial_ttl)
     result["functionName"] = function.__name__
@@ -39,10 +44,12 @@ def run_batch(visualize: bool = True):
     starting_node = "node_21"
     desired_resource = "nebula_nights.mp3"
     initial_ttl = 10
-    function_pool = [flooding_search, informed_flooding_search]
-    chosen_function = informed_flooding_search
-    # result_aux = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
-    result = get_search_result(filename, starting_node, desired_resource, 11, chosen_function)
+    function_pool = [flooding_search, informed_flooding_search,
+                     start_random_walk_search, start_informed_random_walk_search]
+    chosen_function = start_random_walk_search
+    graph = get_graph(filename)
+    # result_aux = get_search_result(graph, starting_node, desired_resource, initial_ttl, chosen_function)
+    result = get_search_result(graph, starting_node, desired_resource, 11, chosen_function)
     final_result = {"starting_node": starting_node, "target_resource": desired_resource, "initial_ttl": initial_ttl,
                     "function": str(chosen_function), "nodes_visited": len(result["visited"]),
                     "total_messages": result["totalMessages"]}

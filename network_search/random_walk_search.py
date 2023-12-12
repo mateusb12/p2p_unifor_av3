@@ -12,7 +12,7 @@ def start_random_walk_search(inputGraph: Graph, start_node_id: str, desiredResou
     current_node = inputGraph.data.get(start_node_id)
 
     if current_node is None:
-        return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "message_amount": message_count}
+        return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "totalMessages": message_count}
 
     ttl = initial_ttl
 
@@ -20,13 +20,13 @@ def start_random_walk_search(inputGraph: Graph, start_node_id: str, desiredResou
         neighbors = current_node.neighbors
 
         if not neighbors:
-            return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "message_amount": message_count}
+            return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "totalMessages": message_count}
 
         next_node = random.choice(neighbors)
         current_node = inputGraph.data.get(next_node)
 
         if current_node is None:
-            return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "message_amount": message_count}
+            return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "totalMessages": message_count}
 
         ttl -= 1
         visited_nodes.append(next_node)
@@ -36,9 +36,9 @@ def start_random_walk_search(inputGraph: Graph, start_node_id: str, desiredResou
         print(f"Current Node: {next_node}, TTL: {ttl}, Visited Nodes: {visited_nodes}")
 
         if desiredResource in current_node.resources:
-            return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history, "message_amount": message_count}
+            return {"visited": visited_nodes, "found": True, "ttl_history": ttl_history, "totalMessages": message_count}
 
-    return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "message_amount": message_count}
+    return {"visited": visited_nodes, "found": False, "ttl_history": ttl_history, "totalMessages": message_count}
 
 
 def __main():
