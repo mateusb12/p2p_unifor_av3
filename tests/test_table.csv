@@ -1,4 +1,4 @@
-test_name,filename,starting_node,target_resource,initial_ttl,function,batch,nodes_visited,message_amount
-cacheless_a,json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34
-cacheless_b,json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34
-cacheless_c,json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34
+test_name,filename,starting_node,target_resource,initial_ttl,function,batch,nodes_visited,message_amount,flooding_search_nodes_visited,flooding_search_message_amount,informed_flooding_search_nodes_visited,informed_flooding_search_message_amount,random_walk_search_nodes_visited,random_walk_search_message_amount,informed_random_walk_search_nodes_visited,informed_random_walk_search_message_amount
+cacheless_a,json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34,30,34,30,29,1,0,10,10
+cacheless_b,json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34,30,34,30,29,1,0,10,10
+cacheless_c,json_example.json,node_21,nebula_nights.mp3,10,flooding_search,1,30,34,30,34,30,29,1,0,10,10

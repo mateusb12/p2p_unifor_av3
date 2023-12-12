@@ -24,6 +24,13 @@ def informed_flooding_search(inputGraph: Graph, start_node_id: str, desiredResou
             last_visited_info[current_node_label] = last_visited
             continue
 
+        if desiredResource in current_node.cache:
+            visited_nodes.append(current_node_label)
+            ttl_history.append(current_ttl)
+            found = current_node.cache[desiredResource]["node_id"]
+            last_visited_info[current_node_label] = last_visited
+            continue
+
         if current_ttl < 0:
             continue
 

@@ -24,7 +24,7 @@ def load_tests() -> pd.DataFrame:
     return pd.read_csv(file_path)
 
 
-def run_test(filename, starting_node, desired_resource, initial_ttl, chosen_function):
+def run_test(filename: str, starting_node: str, desired_resource: str, initial_ttl: int, chosen_function):
     result = get_search_result(filename, starting_node, desired_resource, initial_ttl, chosen_function)
     nodes_visited = len(result["visited"])
 
@@ -73,13 +73,14 @@ def generate_comparison_plots(df: pd.DataFrame, methods: list):
         plt.xticks(index + bar_width * (len(methods) - 1) / 2, df["filename"], rotation=45, ha='right')
         plt.legend()
         plt.tight_layout()
-        plt.savefig(Path(get_network_tests_path(), f'{metric}_comparison_plot.png'))
+        # plt.savefig(Path(get_network_tests_path(), f'{metric}_comparison_plot.png'))
         plt.show()
 
 
 def __main():
     df = load_tests()
     loop_through_tests(df)
+    generate_comparison_plots(df, list(function_table.keys()))
 
 
 if __name__ == '__main__':
