@@ -7,8 +7,8 @@ from network_structure.node_object import Node
 
 def start_informed_random_walk_search(inputGraph: Graph, start_node_id: str, desiredResource: str, initial_ttl: int = 5) -> dict:
     visit_order, found, ttl_history, totalMessages, found_node = _random_walk_helper(inputGraph, start_node_id,
-                                                                                  desiredResource, initial_ttl,
-                                                                                  True)
+                                                                                     desiredResource, initial_ttl,
+                                                                                     False)
     return {
         "visited": visit_order, "found": found, "ttl_history": ttl_history, "totalMessages": totalMessages,
         "targetNode": found_node, "functionName": start_informed_random_walk_search.__name__,
