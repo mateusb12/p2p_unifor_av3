@@ -7,10 +7,11 @@ from network_structure.graph_object import Graph
 def convert_graph_to_networkx(input_graph: Graph) -> nx.Graph:
     G = nx.Graph()
     for node in input_graph.data.values():
-        node_to_be_added = node.node_id
-        G.add_node(node_to_be_added, info=node.resources, ttl=node.ttl)
+        node_alias = node.node_id
+        G.add_node(node_alias, info=node.resources, ttl=node.ttl)
         for neighbor in node.neighbors:
-            G.add_edge(node.node_id, neighbor.node_id)
+            weight = node.weighted_edges[neighbor.node_id]
+            G.add_edge(node.node_id, neighbor.node_id, weight=weight)
     return G
 
 
