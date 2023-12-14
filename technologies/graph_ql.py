@@ -3,51 +3,71 @@ from fastapi.responses import JSONResponse
 import graphene
 from graphql import graphql
 import uvicorn
-
-from technologies.mock_data import users
-
-
-# Define GraphQL types
-class UserType(graphene.ObjectType):
-    name = graphene.String()
-    email = graphene.String()
-    friends = graphene.List(graphene.String)
-    posts = graphene.List(graphene.String)
-    activity = graphene.JSONString()
-
-    def resolve_friends(self, info):
-        return self.friends
-
-    def resolve_posts(self, info):
-        return self.posts
-
-    def resolve_activity(self, info):
-        return self.activity
+from flask import Flask, jsonify, request
+from flask_graphql import GraphQLView
+from graphene import ObjectType, Schema, List, String, Int
+import json
 
 
-class Query(graphene.ObjectType):
-    user = graphene.Field(UserType, id=graphene.String(required=True))
+app = Flask(__name__)
 
-    async def resolve_user(self, info, id):
-        return users.get(id)
+# Your existing data loading code
+with open('../db/users.json', 'r') as file:
+    users_data = json.load(file)
 
+with open('../db/songs.json', 'r') as file:
+    songs_data = json.load(file)
 
-schema = graphene.Schema(query=Query)
-app = FastAPI()
+with open('../db/playlist.json', 'r') as file:
+    playlists_data = json.load(file)
 
+# Define GraphQL types for your data
+class UserType(ObjectType):
+    id = Int()
+    name = String()
+    idade = Int()
+    sexo = String()
+    email = String()
+    cep = String()
 
-@app.post("/graphql")
-async def graphql_server(request: Request):
-    data = await request.json()
-    query = data.get("query")
-    variables = data.get("variables")
-    context = {"request": request}
-    result = await graphql(schema.graphql_schema, query, context_value=context, variable_values=variables)
-    if result.errors:
-        return JSONResponse({"errors": [str(error) for error in result.errors]})
-    return JSONResponse({"data": result.data})
+class SongType(ObjectType):
+    id = Int()
+    nome = String()
+    artista = String()
+    categoria = String()
+    data_lancamento = String()
 
+class PlaylistType(ObjectType):
+    id_usuario = Int()
+    nome = String()
+    songs = List(SongType)
 
-# To run the server: uvicorn your_script_name:app --reload
-if __name__ == "__main__":
-    uvicorn.run("technologies.graph_ql:app", host="127.0.0.1", port=8000, reload=True)
+# Define GraphQL queries
+class Query(ObjectType):
+    list_all_users = List(UserType)
+    list_all_songs = List(SongType)
+    list_all_playlists = List(PlaylistType)
+
+    def resolve_list_all_users(self, info):
+        return users_data
+
+    def resolve_list_all_songs(self, info):
+        return songs_data
+
+    def resolve_list_all_playlists(self, info):
+        return playlist_data
+
+# Create a GraphQL schema
+schema = Schema(query=Query)
+
+# Define the GraphQL route
+@app.route('/graphql', methods=['POST'])
+def graphql_handler():
+    data = request.get_json()
+    success, result = graphql(schema, data['query'])
+    status_code = 200 if success else 400
+    return JSONResponse(content=result, status_code=status_code)
+
+# Run the Flask app
+if __name__ == '__main__':
+    app.run(debug=True)
