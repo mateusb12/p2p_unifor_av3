@@ -1,4 +1,12 @@
-from utils.general_utils import generate_random_ip_address
+import random
+
+
+def generate_random_ip_address():
+    """
+    Generates a random IP address.
+    :return: A string representing an IP address.
+    """
+    return ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
 
 
 class Node:
@@ -6,6 +14,7 @@ class Node:
         self.node_id = node_id
         self.resources = resources
         self.neighbors = []
+        self.weighted_edges = {}
         self.ip = generate_random_ip_address()
         self.network = node_network
         self.cache = {}

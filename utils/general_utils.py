@@ -1,17 +1,10 @@
-import random
-
 import networkx as nx
 
-
-def generate_random_ip_address():
-    """
-    Generates a random IP address.
-    :return: A string representing an IP address.
-    """
-    return ".".join(map(str, (random.randint(0, 255) for _ in range(4))))
+from json_parsing.json_read import read_json
+from network_structure.graph_object import Graph
 
 
-def convert_graph_to_networkx(input_graph) -> nx.Graph:
+def convert_graph_to_networkx(input_graph: Graph) -> nx.Graph:
     G = nx.Graph()
     for node in input_graph.data.values():
         node_to_be_added = node.node_id
@@ -22,7 +15,9 @@ def convert_graph_to_networkx(input_graph) -> nx.Graph:
 
 
 def __main():
-    random_ip = generate_random_ip_address()
+    json_data = read_json("json_example.json")
+    g = Graph(json_data)
+    nx_graph = convert_graph_to_networkx(g)
     return
 
 
