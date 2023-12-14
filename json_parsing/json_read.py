@@ -97,8 +97,8 @@ def run_all_test_cases():
 
 
 def __main():
-    # json_data = read_and_parse_json("json_example.json")
-    run_all_test_cases()
+    json_data = read_and_parse_json("json_example.json")
+    # run_all_test_cases()
     return
 
 

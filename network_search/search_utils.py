@@ -31,6 +31,7 @@ def _check_found_condition(desired_resource: str, current_node: Node, use_cache:
 def _update_cache(desiredResource, found_node):
     current_node: Node = found_node
     while current_node.previous is not None:
+        print(f"Updating cache for node {current_node.node_id}")
         current_node.cache[desiredResource] = current_node.previous.node_id
         current_node = current_node.previous
 
