@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package streaming;
+
+message User {
+    int32 id = 1;
+    string name = 2;
+}
+
+message Song {
+    int32 id = 1;
+    string name = 2;
+    string artist = 3;
+    string category = 4;
+    string release_date = 5;
+}
+
+message Playlist {
+    int32 id_usuario = 1;
+    string nome = 2;
+    repeated int32 songs = 3;
+}
+
+service MusicService {
+    rpc ListAllUsers (google.protobuf.Empty) returns (stream User);
+    rpc ListAllSongs (google.protobuf.Empty) returns (stream Song);
+    rpc ListUserPlaylists (User) returns (stream Playlist);
+    rpc ListPlaylistSongs (Playlist) returns (stream Song);
+    rpc ListSongPlaylists (Song) returns (stream Playlist);
+}
