@@ -4,6 +4,7 @@ from spyne.server.wsgi import WsgiApplication
 from wsgiref.simple_server import make_server
 import json
 
+
 class MusicService(ServiceBase):
     @rpc(_returns=Iterable(Unicode))
     def list_all_users(self):
@@ -42,6 +43,7 @@ class MusicService(ServiceBase):
         else:
             return []
 
+
 # Create the Spyne application
 application = Application([MusicService], 'music.soap',
                           in_protocol=Soap11(validator='lxml'),
@@ -55,4 +57,3 @@ if __name__ == '__main__':
     server = make_server('localhost', 8000, wsgi_application)
     print("Listening on http://localhost:8000...")
     server.serve_forever()
-

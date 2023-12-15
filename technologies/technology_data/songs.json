@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nome": "Ain't No Sunshine",
+    "artista": "Bill Withers"
+  },
+  {
+    "id": 2,
+    "nome": "Imagine",
+    "artista": "John Lennon"
+  },
+  {
+    "id": 3,
+    "nome": "Bohemian Rhapsody",
+    "artista": "Queen"
+  }
+]

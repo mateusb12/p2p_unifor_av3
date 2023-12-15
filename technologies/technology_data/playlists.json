@@ -1,0 +1,17 @@
+[
+  {
+    "id": 1,
+    "nome": "Minha playlist favorita",
+    "song_ids": [1, 2, 3]
+  },
+  {
+    "id": 2,
+    "nome": "Minha playlist de trabalho",
+    "song_ids": [2, 3]
+  },
+  {
+    "id": 3,
+    "nome": "Minha playlist de balada",
+    "song_ids": [1, 3]
+  }
+]
