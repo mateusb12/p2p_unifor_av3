@@ -13,5 +13,90 @@
     "id": 3,
     "nome": "Bohemian Rhapsody",
     "artista": "Queen"
+  },
+  {
+    "id": 4,
+    "nome": "Let It Be",
+    "artista": "The Beatles"
+  },
+  {
+    "id": 5,
+    "nome": "Hotel California",
+    "artista": "Eagles"
+  },
+  {
+    "id": 6,
+    "nome": "Stairway To Heaven",
+    "artista": "Led Zeppelin"
+  },
+  {
+    "id": 7,
+    "nome": "Smells Like Teen Spirit",
+    "artista": "Nirvana"
+  },
+  {
+    "id": 8,
+    "nome": "Sweet Child O' Mine",
+    "artista": "Guns N' Roses"
+  },
+  {
+    "id": 9,
+    "nome": "Yesterday",
+    "artista": "The Beatles"
+  },
+  {
+    "id": 10,
+    "nome": "Another Brick In The Wall",
+    "artista": "Pink Floyd"
+  },
+  {
+    "id": 11,
+    "nome": "Comfortably Numb",
+    "artista": "Pink Floyd"
+  },
+  {
+    "id": 12,
+    "nome": "Hey Jude",
+    "artista": "The Beatles"
+  },
+  {
+    "id": 13,
+    "nome": "Wish You Were Here",
+    "artista": "Pink Floyd"
+  },
+  {
+    "id": 14,
+    "nome": "Yesterday",
+    "artista": "The Beatles"
+  },
+  {
+    "id": 15,
+    "nome": "Smells Like Teen Spirit",
+    "artista": "Nirvana"
+  },
+  {
+    "id": 16,
+    "nome": "Imagine",
+    "artista": "John Lennon"
+  },
+  {
+    "id": 17,
+    "nome": "One",
+    "artista": "Metallica"
+  },
+  {
+    "id": 18,
+    "nome": "Billie Jean",
+    "artista": "Michael Jackson"
+  },
+  {
+    "id": 19,
+    "nome": "Bohemian Rhapsody",
+    "artista": "Queen"
+  },
+  {
+    "id": 20,
+    "nome": "Like A Rolling Stone",
+    "artista": "Bob Dylan"
   }
 ]

@@ -36,6 +36,10 @@ def get_merged_csv_path() -> Path:
     return get_main_folder_path() / "technologies_tests/results/merged.csv"
 
 
+def get_technology_data_path() -> Path:
+    return get_main_folder_path() / "technologies/technology_data"
+
+
 append_main_folder_to_sys()
 
 

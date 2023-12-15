@@ -7,7 +7,6 @@ import logging
 
 
 class MusicService(streaming_pb2_grpc.MusicServiceServicer):
-
     def __init__(self):
         with open('../db/users.json', 'r') as file:
             self.users_data = json.load(file)

@@ -1,33 +1,41 @@
 from flask import Flask, jsonify
 
-from technologies.mock_data import users, posts
+from path_references.load_references import get_user_data, get_song_data, get_playlist_data
 
 app = Flask(__name__)
+alL_users = get_user_data()
+all_songs = get_song_data()
+all_playlists = get_playlist_data()
 
 
-# Mock data
+@app.route('/get_all_users/', methods=['GET'])
+def get_all_users():
+    return jsonify(alL_users)
 
 
-@app.route('/users/<user_id>', methods=['GET'])
-def get_user(user_id):
-    user = users.get(user_id, {})
-    return jsonify(user)
+@app.route('/get_all_songs/', methods=['GET'])
+def get_all_songs():
+    return jsonify(all_songs)
 
 
-# Endpoint to get user's friends
-@app.route('/users/<user_id>/friends', methods=['GET'])
-def get_user_friends(user_id):
-    user = users.get(user_id, {})
-    friends = [users.get(fid, {}) for fid in user.get("friends", [])]
-    return jsonify(friends)
+@app.route('/get_playlists_by_user_id/<user_id>', methods=['GET'])
+def get_playlists_by_user_id(user_id):
+    user_playlists = [playlist for playlist in all_playlists if playlist["id_usuario"] == int(user_id)]
+    return jsonify(user_playlists)
 
 
-# Endpoint to get user's posts
-@app.route('/users/<user_id>/posts', methods=['GET'])
-def get_user_posts(user_id):
-    user = users.get(user_id, {})
-    user_posts = [posts.get(pid, {}) for pid in user.get("posts", [])]
-    return jsonify(user_posts)
+@app.route('/get_songs_by_playlist/<playlist_id>', methods=['GET'])
+def get_songs_by_playlist(playlist_id):
+    true_id = int(playlist_id)
+    all_playlists = get_playlist_data()
+    all_songs = get_song_data()
+    playlist = next((playlist for playlist in all_playlists if playlist["id"] == int(playlist_id)), None)
+
+    if playlist:
+        songs_in_playlist = playlist.get("songs", [])
+        return jsonify(songs_in_playlist)
+    else:
+        return jsonify([])
 
 
 if __name__ == '__main__':
