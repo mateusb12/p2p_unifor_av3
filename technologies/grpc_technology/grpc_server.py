@@ -6,11 +6,7 @@ import json
 import logging
 
 
-class MusicService(streaming_pb2_grpc.UserServiceServicer,
-                   streaming_pb2_grpc.SongServiceServicer,
-                   streaming_pb2_grpc.UserPlaylistServiceServicer,
-                   streaming_pb2_grpc.PlaylistSongsServiceServicer,
-                   streaming_pb2_grpc.SongPlaylistServiceServicer):
+class MusicService(streaming_pb2_grpc.MusicServiceServicer):
 
     def __init__(self):
         with open('../db/users.json', 'r') as file:
@@ -74,11 +70,7 @@ class MusicService(streaming_pb2_grpc.UserServiceServicer,
 
 def serve():
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=10))
-    streaming_pb2_grpc.add_UserServiceServicer_to_server(MusicService(), server)
-    streaming_pb2_grpc.add_SongServiceServicer_to_server(MusicService(), server)
-    streaming_pb2_grpc.add_UserPlaylistServiceServicer_to_server(MusicService(), server)
-    streaming_pb2_grpc.add_PlaylistSongsServiceServicer_to_server(MusicService(), server)
-    streaming_pb2_grpc.add_SongPlaylistServiceServicer_to_server(MusicService(), server)
+    streaming_pb2_grpc.add_MusicServiceServicer_to_server(MusicService(), server)
     server.add_insecure_port('[::]:50051')
     server.start()
     server.wait_for_termination()

@@ -61,6 +61,26 @@ class NetworkGraphVisualizer:
 
         return Scatter(x=edge_x, y=edge_y, line={"width": 2, "color": "#888"}, hoverinfo='none', mode='lines')
 
+    def __create_edge_trace_with_hover(self):
+        edge_x, edge_y, edge_hover_text = [], [], []
+        for edge in self.graph.edges():
+            x0, y0 = self.position[edge[0]]
+            x1, y1 = self.position[edge[1]]
+            edge_x.extend([x0, x1, None])
+            edge_y.extend([y0, y1, None])
+
+            # Create hover text for the edge
+            edge_hover_text.append(f"From: {edge[0]}<br>To: {edge[1]}")
+
+        return Scatter(
+            x=edge_x,
+            y=edge_y,
+            line={"width": 2, "color": "#888"},
+            hoverinfo='text',
+            text=edge_hover_text,
+            mode='lines'
+        )
+
     def __get_node_plot_data(self):
         node_x, node_y, node_resources = [], [], []
         for node in self.graph.nodes():
@@ -142,7 +162,7 @@ class NetworkGraphVisualizer:
         found: str = result["found"]
         ttl_history: List[str] = result["ttl_history"]
         node_x, node_y, _ = self.__get_node_plot_data()
-        edge_trace = self.__create_edge_trace()
+        edge_trace = self.__create_edge_trace_with_hover()
         text_trace = self.__get_text_trace()
         node_trace_original = self.__get_node_trace([])
 
